@@ -100,8 +100,10 @@ change; no TODO remains that could turn a healthy result into a false positive.
 arbitrary UID with a read-only root and only `/tmp` writable; SIGTERM drains HTTP
 and cancels scans; the container drops capabilities and forbids privilege
 escalation; the image contains no credentials, source tree, package manager, or
-writable application directory; SBOM and vulnerability results are retained as CI
-artifacts; amd64 and arm64 builds succeed for release milestones.
+writable application directory; SBOM and vulnerability results are retained as
+CI artifacts; amd64 and arm64 builds succeed for release milestones. A
+successful annotated version tag publishes permanent release assets and a
+multi-architecture GHCR image with SBOM and provenance attestations.
 
 **Verification** — the affected [check layers](reference/checks.md) pass in CI,
 and a reviewer can reproduce each one through a documented `make` target.

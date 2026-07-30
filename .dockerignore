@@ -2,6 +2,9 @@
 .github
 bin
 dist
+artifacts
 proofs
+release
+web
 *.out
 coverage.txt
