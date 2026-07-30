@@ -56,6 +56,19 @@ define output.
 The single-repository configuration contract was frozen on 2026-07-27. Change it
 only with matching compatibility, documentation, and test updates.
 
+## Release branches
+
+Branches named `release-X.Y` freeze the user-visible feature set at `vX.Y.0`.
+They accept only bug and security fixes, dependency or toolchain updates,
+documentation corrections for the frozen behavior, and CI or release
+maintenance. Do not add configuration, providers, repository formats, API
+capabilities, routes, or other functionality on a release branch.
+
+Land a generally applicable fix on `main` first and backport it with its tests
+and documentation. A release-only fix needs an explicit compatibility reason.
+Every backport must preserve the release's configuration and evidence contracts
+and pass the same applicable checks as `main`.
+
 ## Hard rules — violating any of these is a bug
 
 1. **Read-only by construction.** Domain code may use only list, bounded

@@ -15,6 +15,14 @@ readers. Where they disagree, the code is right and the page is a bug. Do not ad
 a `docs/` tree — contributor rules go in [`AGENTS.md`](AGENTS.md), reader-facing
 explanation goes in `web/`.
 
+## Release branches
+
+`release-X.Y` branches are maintenance-only after `vX.Y.0`: bug and security
+fixes, dependency or toolchain updates, documentation corrections, and release
+maintenance are welcome; new functionality belongs on `main`. Prefer landing a
+fix on `main` first and backporting the complete tested change. The normative
+policy is in [`AGENTS.md`](AGENTS.md#release-branches).
+
 ## Development environment
 
 - Go 1.26+ (both modules pin the toolchain to 1.26.5)

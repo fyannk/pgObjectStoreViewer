@@ -39,11 +39,17 @@ const config: Config = {
           path: 'docs',
           sidebarPath: './sidebars.ts',
           includeCurrentVersion: true,
+          lastVersion: '0.1.0',
           versions: {
             current: {
               label: 'Dev',
               badge: true,
               banner: 'unreleased',
+            },
+            '0.1.0': {
+              label: 'v0.1.0',
+              badge: true,
+              banner: 'none',
             },
           },
         },
