@@ -22,7 +22,7 @@ import (
 	"slices"
 	"sort"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
 )
 
 // Format exposes only identity and common capabilities at the shared boundary.

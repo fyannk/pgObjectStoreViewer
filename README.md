@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/fyannk/object-store-viewer/actions/workflows/ci.yml"><img src="https://github.com/fyannk/object-store-viewer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
-  <a href="https://github.com/fyannk/object-store-viewer/actions/workflows/docs.yml"><img src="https://github.com/fyannk/object-store-viewer/actions/workflows/docs.yml/badge.svg" alt="Documentation status"></a>
+  <a href="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/ci.yml"><img src="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/docs.yml"><img src="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/docs.yml/badge.svg" alt="Documentation status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache-2.0 license"></a>
   <img src="https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white" alt="Go 1.26">
 </p>
@@ -54,8 +54,8 @@ You need Go 1.26+, `make`, a repository root, and credentials restricted to
 **list/get** operations.
 
 ```bash
-git clone https://github.com/fyannk/object-store-viewer.git
-cd object-store-viewer
+git clone https://github.com/fyannk/pgObjectStoreViewer.git
+cd pgObjectStoreViewer
 make build
 
 REPOSITORY_FORMAT=barman-cloud \
@@ -115,7 +115,7 @@ its read-only policies under [`deploy/policies/`](deploy/policies/).
 
 ## 📚 Documentation
 
-The details live in the **[documentation site](https://fyannk.github.io/object-store-viewer/)**:
+The details live in the **[documentation site](https://fyannk.github.io/pgObjectStoreViewer/)**:
 
 - [Getting started](web/docs/tutorials/getting-started.md)
 - [Installation](web/docs/operations/installation.md)

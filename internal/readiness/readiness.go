@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
 )
 
 // Clock makes freshness deterministic in tests.

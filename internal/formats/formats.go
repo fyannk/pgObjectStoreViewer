@@ -16,9 +16,9 @@
 package formats
 
 import (
-	"github.com/fyannk/objectstoreviewer/internal/formats/barmancloud"
-	"github.com/fyannk/objectstoreviewer/internal/formats/pgbackrest"
-	"github.com/fyannk/objectstoreviewer/internal/repository"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/barmancloud"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/pgbackrest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/repository"
 )
 
 func Builtins() (*repository.Registry, error) {

@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 // ReaderContract verifies the provider-neutral safety surface. Provider

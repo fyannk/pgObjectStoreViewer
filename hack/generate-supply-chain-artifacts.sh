@@ -6,7 +6,7 @@ artifact_dir=${2:-artifacts/release}
 syft_image='anchore/syft@sha256:f94e5d9fce1f2278491a8e3a63bd5f6ddb81fdfdbb8bf7a1637565c1d5344357'
 trivy_image='aquasec/trivy@sha256:a22415a38938a56c379387a8163fcb0ce38b10ace73e593475d3658d578b2436'
 go_licenses_version='v1.6.0'
-api_module='github.com/fyannk/objectstoreviewer/api'
+api_module='github.com/fyannk/pgObjectStoreViewer/api'
 vulnerability_result=$(mktemp)
 license_warnings=$(mktemp)
 

@@ -18,7 +18,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
 )
 
 func TestBuiltinsExposeBothFormatsAndObjectInventory(t *testing.T) {

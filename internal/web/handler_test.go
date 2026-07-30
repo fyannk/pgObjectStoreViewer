@@ -25,12 +25,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/fault"
-	"github.com/fyannk/objectstoreviewer/internal/formats/barmancloud"
-	"github.com/fyannk/objectstoreviewer/internal/inventory"
-	"github.com/fyannk/objectstoreviewer/internal/readiness"
-	"github.com/fyannk/objectstoreviewer/internal/repository"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/barmancloud"
+	"github.com/fyannk/pgObjectStoreViewer/internal/inventory"
+	"github.com/fyannk/pgObjectStoreViewer/internal/readiness"
+	"github.com/fyannk/pgObjectStoreViewer/internal/repository"
 )
 
 func TestHandlerRendersUnknownEmptyShellAndEscapesValues(t *testing.T) {

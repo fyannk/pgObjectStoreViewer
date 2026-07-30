@@ -30,8 +30,8 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 // MaxBackupInfoBytes bounds format metadata before parsing.  A bigger object

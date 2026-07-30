@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidenceapi"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidenceapi"
 )
 
 func TestRunProbeLoadsOnlyEvidenceTokenConfiguration(t *testing.T) {

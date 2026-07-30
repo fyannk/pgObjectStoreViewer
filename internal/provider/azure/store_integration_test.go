@@ -26,9 +26,9 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 
-	"github.com/fyannk/objectstoreviewer/internal/provider/cursor"
-	"github.com/fyannk/objectstoreviewer/internal/provider/providertest"
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/cursor"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/providertest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 func TestAzuriteJourneyWithReadOnlySAS(t *testing.T) {

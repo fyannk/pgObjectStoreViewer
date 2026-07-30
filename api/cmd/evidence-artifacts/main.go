@@ -21,7 +21,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fyannk/objectstoreviewer/api/internal/evidenceartifacts"
+	"github.com/fyannk/pgObjectStoreViewer/api/internal/evidenceartifacts"
 )
 
 func main() {

@@ -5,9 +5,9 @@ sidebar_position: 6
 # Development
 
 Contribution rules live in
-[`CONTRIBUTING.md`](https://github.com/fyannk/objectstoreviewer/blob/main/CONTRIBUTING.md),
+[`CONTRIBUTING.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/CONTRIBUTING.md),
 and the complete normative rules for human and automated contributors are in
-[`AGENTS.md`](https://github.com/fyannk/objectstoreviewer/blob/main/AGENTS.md).
+[`AGENTS.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/AGENTS.md).
 This page is the short version, plus how this site relates to the code.
 
 ## Code is the truth
@@ -41,8 +41,8 @@ sources of truth is one too many.
 
 | Module | Path | Rule |
 |---|---|---|
-| `github.com/fyannk/objectstoreviewer` | root | the application |
-| `github.com/fyannk/objectstoreviewer/api` | `api/` | the wire vocabulary — **zero external module dependencies**, asserted by `make check-api` |
+| `github.com/fyannk/pgObjectStoreViewer` | root | the application |
+| `github.com/fyannk/pgObjectStoreViewer/api` | `api/` | the wire vocabulary — **zero external module dependencies**, asserted by `make check-api` |
 
 Never import a provider SDK, format parser, HTTP server, or credential
 implementation from the `api` module.

@@ -23,10 +23,10 @@ import (
 	"strings"
 	"time"
 
-	evidencev1alpha1 "github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1"
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/formats/barmancloud"
-	"github.com/fyannk/objectstoreviewer/internal/inventory"
+	evidencev1alpha1 "github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/barmancloud"
+	"github.com/fyannk/pgObjectStoreViewer/internal/inventory"
 )
 
 // Options contains only operator-resolved, credential-free producer identity.

@@ -113,7 +113,7 @@ object prefixes are explicitly *not* substitute correlation keys.
 ## A types-only module
 
 **Decided in the evidence API contract.** The wire vocabulary lives in
-`github.com/fyannk/objectstoreviewer/api` with **zero external module
+`github.com/fyannk/pgObjectStoreViewer/api` with **zero external module
 dependencies**, so consumers can depend on the contract without inheriting a
 cloud SDK, a compression library, or a repository parser. Collector, publisher,
 engine, provider, and analyzer interfaces stay implementation details that

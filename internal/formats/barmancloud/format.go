@@ -22,8 +22,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/repository"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/repository"
 )
 
 type Format struct{}

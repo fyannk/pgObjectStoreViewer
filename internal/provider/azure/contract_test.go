@@ -21,9 +21,9 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
-	"github.com/fyannk/objectstoreviewer/internal/provider/cursor"
-	"github.com/fyannk/objectstoreviewer/internal/store"
-	"github.com/fyannk/objectstoreviewer/internal/store/storetest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/cursor"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store/storetest"
 )
 
 func TestAzureSharedReaderContract(t *testing.T) {
