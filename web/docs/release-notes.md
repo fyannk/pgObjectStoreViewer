@@ -71,6 +71,10 @@ The evidence API is `evidence.objectstoreviewer.io/v1alpha1` and is additive-onl
 within the version: new fields may appear, and consumers must ignore what they do
 not recognize. Unrecognized typed-details tags are discarded.
 
+On **2026-07-30**, the repository, Go modules, and JSON Schema identifier moved
+to `github.com/fyannk/pgObjectStoreViewer`. Go consumers must update their import
+paths; the evidence API version and wire vocabulary are unchanged.
+
 ## Verified environments
 
 | Environment | Evidence |

@@ -30,9 +30,9 @@ import (
 	"testing"
 	"time"
 
-	evidencev1alpha1 "github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1"
-	"github.com/fyannk/objectstoreviewer/internal/inventory"
-	"github.com/fyannk/objectstoreviewer/internal/readiness"
+	evidencev1alpha1 "github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1"
+	"github.com/fyannk/pgObjectStoreViewer/internal/inventory"
+	"github.com/fyannk/pgObjectStoreViewer/internal/readiness"
 )
 
 func TestEvidenceHandlerServesClosedAuthenticatedRouteSet(t *testing.T) {

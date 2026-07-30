@@ -23,9 +23,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/fyannk/objectstoreviewer/internal/application"
-	"github.com/fyannk/objectstoreviewer/internal/config"
-	"github.com/fyannk/objectstoreviewer/internal/evidenceapi"
+	"github.com/fyannk/pgObjectStoreViewer/internal/application"
+	"github.com/fyannk/pgObjectStoreViewer/internal/config"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidenceapi"
 )
 
 var version = "development"

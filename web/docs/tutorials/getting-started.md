@@ -10,8 +10,8 @@ cluster, no cloud account.
 ## 1. Build the binary
 
 ```bash
-git clone https://github.com/fyannk/objectstoreviewer
-cd objectstoreviewer
+git clone https://github.com/fyannk/pgObjectStoreViewer
+cd pgObjectStoreViewer
 make build
 ```
 

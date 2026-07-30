@@ -23,9 +23,9 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/fyannk/objectstoreviewer/internal/provider/cursor"
-	"github.com/fyannk/objectstoreviewer/internal/store"
-	"github.com/fyannk/objectstoreviewer/internal/store/storetest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/cursor"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store/storetest"
 	"google.golang.org/api/option"
 )
 

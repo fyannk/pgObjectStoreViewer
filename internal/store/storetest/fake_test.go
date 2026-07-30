@@ -19,7 +19,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 func TestFakeRejectsCanceledOperationsBeforeDelegation(t *testing.T) {

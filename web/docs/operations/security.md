@@ -53,7 +53,7 @@ spec:
 | Credential | the deployment credential must independently deny writes — the layer that survives a bug in the other two |
 
 Use the templates under
-[`deploy/policies`](https://github.com/fyannk/objectstoreviewer/tree/main/deploy/policies)
+[`deploy/policies`](https://github.com/fyannk/pgObjectStoreViewer/tree/main/deploy/policies)
 and scope them to the exact destination prefix. See the [policy
 reference](../reference/policies.md).
 

@@ -27,9 +27,9 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 
-	"github.com/fyannk/objectstoreviewer/internal/fault"
-	"github.com/fyannk/objectstoreviewer/internal/provider/cursor"
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/cursor"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 type Options struct {

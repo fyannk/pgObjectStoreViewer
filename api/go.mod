@@ -1,4 +1,4 @@
-module github.com/fyannk/objectstoreviewer/api
+module github.com/fyannk/pgObjectStoreViewer/api
 
 go 1.26.0
 

@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
-	"github.com/fyannk/objectstoreviewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
 )
 
 func TestSafeErrorRedactsAzureSDKDetails(t *testing.T) {

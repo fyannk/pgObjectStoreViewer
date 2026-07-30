@@ -21,7 +21,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 // Fake delegates to optional functions and otherwise returns empty evidence.

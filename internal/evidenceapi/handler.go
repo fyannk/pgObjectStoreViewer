@@ -29,8 +29,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	evidencev1alpha1 "github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1"
-	"github.com/fyannk/objectstoreviewer/internal/readiness"
+	evidencev1alpha1 "github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1"
+	"github.com/fyannk/pgObjectStoreViewer/internal/readiness"
 )
 
 const (

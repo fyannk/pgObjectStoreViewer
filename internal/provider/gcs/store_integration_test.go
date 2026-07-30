@@ -28,7 +28,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/provider/providertest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/providertest"
 )
 
 func TestFakeGCSJourney(t *testing.T) {

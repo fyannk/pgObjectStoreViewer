@@ -1,4 +1,4 @@
-module github.com/fyannk/objectstoreviewer
+module github.com/fyannk/pgObjectStoreViewer
 
 go 1.26.0
 
@@ -15,7 +15,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.106.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.45.0
 	github.com/aws/smithy-go v1.27.4
-	github.com/fyannk/objectstoreviewer/api v0.0.0
+	github.com/fyannk/pgObjectStoreViewer/api v0.0.0
 	github.com/golang/snappy v1.0.0
 	github.com/klauspost/compress v1.19.1
 	github.com/pierrec/lz4/v4 v4.1.27
@@ -24,7 +24,7 @@ require (
 	google.golang.org/api v0.287.1
 )
 
-replace github.com/fyannk/objectstoreviewer/api => ./api
+replace github.com/fyannk/pgObjectStoreViewer/api => ./api
 
 require (
 	cel.dev/expr v0.25.1 // indirect

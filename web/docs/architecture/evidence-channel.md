@@ -48,7 +48,7 @@ filesystem profile](../operations/sidecar.md#required-filesystem-profile).
 ## The dependency-light module
 
 The wire vocabulary lives in a separate Go module,
-`github.com/fyannk/objectstoreviewer/api`, which imports **no** main
+`github.com/fyannk/pgObjectStoreViewer/api`, which imports **no** main
 ObjectStoreViewer package, cloud SDK, compression library, repository parser,
 HTTP server, or credential implementation. `make check-api` asserts
 that it has zero external module dependencies.

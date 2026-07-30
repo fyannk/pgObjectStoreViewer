@@ -9,7 +9,7 @@ has no mutation operation in its domain or any provider adapter, but the
 credential is the layer that survives a bug.
 
 Templates live in
-[`deploy/policies`](https://github.com/fyannk/objectstoreviewer/tree/main/deploy/policies)
+[`deploy/policies`](https://github.com/fyannk/pgObjectStoreViewer/tree/main/deploy/policies)
 and are guarded by `hack/check-readonly.sh`, which fails the build if a
 forbidden action ever appears in them.
 

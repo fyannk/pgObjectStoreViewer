@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
 )
 
 func TestProbeStateRequiresRecentReachability(t *testing.T) {

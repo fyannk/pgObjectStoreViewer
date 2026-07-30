@@ -9,7 +9,7 @@ pagination, and error rules are in the [evidence API
 reference](evidence-api.md).
 
 The authoritative machine-readable definition is the generated
-[`api/evidence/v1alpha1/schema.json`](https://github.com/fyannk/objectstoreviewer/blob/main/api/evidence/v1alpha1/schema.json)
+[`api/evidence/v1alpha1/schema.json`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/api/evidence/v1alpha1/schema.json)
 plus the Go types beside it and the wire goldens under `testdata/wire`. If this
 page and the schema ever disagree, the schema is right.
 

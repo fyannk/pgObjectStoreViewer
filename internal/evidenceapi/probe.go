@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"time"
 
-	evidencev1alpha1 "github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1"
+	evidencev1alpha1 "github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1"
 )
 
 const (

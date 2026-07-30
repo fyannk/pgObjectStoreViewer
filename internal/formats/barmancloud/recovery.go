@@ -34,8 +34,8 @@ import (
 	"github.com/pierrec/lz4/v4"
 	"github.com/ulikunitz/xz"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 const (

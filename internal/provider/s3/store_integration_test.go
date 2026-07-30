@@ -34,14 +34,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	awss3 "github.com/aws/aws-sdk-go-v2/service/s3"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/fault"
-	"github.com/fyannk/objectstoreviewer/internal/formats/barmancloud"
-	"github.com/fyannk/objectstoreviewer/internal/inventory"
-	"github.com/fyannk/objectstoreviewer/internal/provider/providertest"
-	"github.com/fyannk/objectstoreviewer/internal/readiness"
-	"github.com/fyannk/objectstoreviewer/internal/store"
-	"github.com/fyannk/objectstoreviewer/internal/web"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/barmancloud"
+	"github.com/fyannk/pgObjectStoreViewer/internal/inventory"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/providertest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/readiness"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/web"
 )
 
 func TestS3MinIOJourney(t *testing.T) {

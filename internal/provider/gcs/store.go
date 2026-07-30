@@ -27,9 +27,9 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 
-	"github.com/fyannk/objectstoreviewer/internal/fault"
-	"github.com/fyannk/objectstoreviewer/internal/provider/cursor"
-	"github.com/fyannk/objectstoreviewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/provider/cursor"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
 )
 
 type Options struct {

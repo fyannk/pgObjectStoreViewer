@@ -9,13 +9,13 @@ const config: Config = {
   tagline: 'Structural evidence about PostgreSQL backup repositories — never a restore guarantee',
   favicon: 'img/favicon.svg',
 
-  // GitHub Pages for fyannk/objectstoreviewer.
+  // GitHub Pages for fyannk/pgObjectStoreViewer.
   url: 'https://fyannk.github.io',
-  baseUrl: '/objectstoreviewer/',
+  baseUrl: '/pgObjectStoreViewer/',
   trailingSlash: true,
 
   organizationName: 'fyannk',
-  projectName: 'objectstoreviewer',
+  projectName: 'pgObjectStoreViewer',
 
   onBrokenLinks: 'throw',
 

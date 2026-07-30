@@ -28,8 +28,8 @@ The repository contains two Go modules:
 
 | Module | Path | Purpose |
 |---|---|---|
-| `github.com/fyannk/objectstoreviewer` | repository root | the application, providers, formats, and runtimes |
-| `github.com/fyannk/objectstoreviewer/api` | [`api/`](api) | the dependency-light `evidence.objectstoreviewer.io/v1alpha1` wire vocabulary |
+| `github.com/fyannk/pgObjectStoreViewer` | repository root | the application, providers, formats, and runtimes |
+| `github.com/fyannk/pgObjectStoreViewer/api` | [`api/`](api) | the dependency-light `evidence.objectstoreviewer.io/v1alpha1` wire vocabulary |
 
 The `api` module must keep **zero external module dependencies**;
 `make check-api` asserts it. Never import a provider SDK, a format

@@ -1,5 +1,5 @@
 {
-  "$comment": "Generated from github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1. Go Validate methods enforce cross-field, ordering, UTC, and UTF-8 byte-length invariants that JSON Schema cannot express portably.",
+  "$comment": "Generated from github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1. Go Validate methods enforce cross-field, ordering, UTC, and UTF-8 byte-length invariants that JSON Schema cannot express portably.",
   "$defs": {
     "BarmanBackup": {
       "additionalProperties": true,
@@ -1743,7 +1743,7 @@
       "type": "string"
     }
   },
-  "$id": "https://github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1/schema.json",
+  "$id": "https://github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1/schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "oneOf": [
     {

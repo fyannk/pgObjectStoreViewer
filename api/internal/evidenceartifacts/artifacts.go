@@ -24,12 +24,12 @@ import (
 	"strings"
 	"time"
 
-	evidencev1alpha1 "github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1"
+	evidencev1alpha1 "github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1"
 )
 
 const (
 	schemaDraft = "https://json-schema.org/draft/2020-12/schema"
-	schemaID    = "https://github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1/schema.json"
+	schemaID    = "https://github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1/schema.json"
 )
 
 var (
@@ -85,7 +85,7 @@ func generateSchema() ([]byte, error) {
 	document := jsonSchema{
 		"$schema":  schemaDraft,
 		"$id":      schemaID,
-		"$comment": "Generated from github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1. Go Validate methods enforce cross-field, ordering, UTC, and UTF-8 byte-length invariants that JSON Schema cannot express portably.",
+		"$comment": "Generated from github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1. Go Validate methods enforce cross-field, ordering, UTC, and UTF-8 byte-length invariants that JSON Schema cannot express portably.",
 		"title":    "ObjectStoreViewer evidence API v1alpha1",
 		"oneOf":    rootReferences,
 		"$defs":    generator.definitions,

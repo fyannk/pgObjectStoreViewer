@@ -31,9 +31,9 @@ import (
 	"github.com/pierrec/lz4/v4"
 	"github.com/ulikunitz/xz"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/store"
-	"github.com/fyannk/objectstoreviewer/internal/store/storetest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store/storetest"
 )
 
 const validHistory = "1\t0/02000000\tfirst branch\n2\t0/04000000\tsecond branch\n"

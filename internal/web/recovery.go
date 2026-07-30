@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/formats/barmancloud"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/barmancloud"
 )
 
 type recoveryServerView struct {

@@ -28,10 +28,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fyannk/objectstoreviewer/internal/evidence"
-	"github.com/fyannk/objectstoreviewer/internal/formats/barmancloud"
-	"github.com/fyannk/objectstoreviewer/internal/store"
-	"github.com/fyannk/objectstoreviewer/internal/store/storetest"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidence"
+	"github.com/fyannk/pgObjectStoreViewer/internal/formats/barmancloud"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store/storetest"
 )
 
 const scaleObjectCount = 1_000_000

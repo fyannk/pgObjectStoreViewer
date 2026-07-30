@@ -60,7 +60,7 @@ semantics, and SIGTERM handling.
 
 ## Deploy on Kubernetes
 
-[`deploy/kubernetes-example.yaml`](https://github.com/fyannk/objectstoreviewer/blob/main/deploy/kubernetes-example.yaml)
+[`deploy/kubernetes-example.yaml`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/deploy/kubernetes-example.yaml)
 is the reference manifest: a Deployment, an internal `ClusterIP` Service on port
 3000, and a default-deny ingress `NetworkPolicy`.
 

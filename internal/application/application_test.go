@@ -33,13 +33,13 @@ import (
 	"testing"
 	"time"
 
-	evidencev1alpha1 "github.com/fyannk/objectstoreviewer/api/evidence/v1alpha1"
-	"github.com/fyannk/objectstoreviewer/internal/config"
-	"github.com/fyannk/objectstoreviewer/internal/evidenceapi"
-	"github.com/fyannk/objectstoreviewer/internal/fault"
-	"github.com/fyannk/objectstoreviewer/internal/inventory"
-	"github.com/fyannk/objectstoreviewer/internal/store"
-	"github.com/fyannk/objectstoreviewer/internal/store/storetest"
+	evidencev1alpha1 "github.com/fyannk/pgObjectStoreViewer/api/evidence/v1alpha1"
+	"github.com/fyannk/pgObjectStoreViewer/internal/config"
+	"github.com/fyannk/pgObjectStoreViewer/internal/evidenceapi"
+	"github.com/fyannk/pgObjectStoreViewer/internal/fault"
+	"github.com/fyannk/pgObjectStoreViewer/internal/inventory"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store"
+	"github.com/fyannk/pgObjectStoreViewer/internal/store/storetest"
 )
 
 func fakeReaderFactory(context.Context, config.Config) (store.Reader, error) {
