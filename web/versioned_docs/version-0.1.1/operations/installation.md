@@ -42,14 +42,20 @@ endpoint presents a private CA.
 ## Run the image
 
 ```bash
-make docker-build            # objectstoreviewer:dev
+docker pull ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1
 docker run --rm -p 3000:3000 \
   -e REPOSITORY_FORMAT=barman-cloud \
   -e PROVIDER=s3 \
   -e DESTINATION_PATH=s3://example-backups/repository \
   -e AWS_REGION=eu-west-1 \
-  objectstoreviewer:dev
+  ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1
 ```
+
+Use a version tag or digest for deployments. The
+[GitHub Release](https://github.com/fyannk/pgObjectStoreViewer/releases/tag/v0.1.1)
+provides the immutable digest, Linux binaries, checksums, SPDX SBOM, license
+inventory, and vulnerability report. `make docker-build` remains available for
+local source builds as `objectstoreviewer:dev`.
 
 The image is a statically linked Go 1.26.5 binary on
 `gcr.io/distroless/static-debian13:nonroot`, running as UID/GID 65532, with no
