@@ -74,4 +74,9 @@ Every pull request runs build/unit/race/stress/API checks, lint and static
 analysis, vulnerability scanning, documentation, Barman/provider integration,
 the bounded-resource suite, and both restricted container profiles. A push to
 `main` additionally builds release binaries, checks amd64 and arm64 images, and
-retains the SBOM, image digest, license report, and vulnerability result.
+retains the SBOM, image digest, license report, and vulnerability result. After
+that complete CI workflow succeeds for an annotated `v*` tag, the release
+workflow publishes the binaries and reports to GitHub Releases and a
+multi-architecture image to `ghcr.io/fyannk/pgobjectstoreviewer`. The registry
+image carries OCI SBOM and provenance attestations; GitHub attestations cover
+the image and standalone binaries.
