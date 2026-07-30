@@ -1,0 +1,151 @@
+name: 🐛 Bug report
+description: The application crashes, fails to start, misbehaves, or the documentation is wrong.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report.
+
+        > [!CAUTION]
+        > **Never paste credentials, SAS parameters, signed URLs, destination
+        > URLs, production bucket names, object keys, or raw provider SDK
+        > errors.** Redact them or replace them with obviously fake values. The
+        > process itself will not have emitted any of these — if you are seeing
+        > one in its output, stop and
+        > [report it privately](https://github.com/fyannk/pgObjectStoreViewer/security/advisories/new)
+        > instead: that is a disclosure bug, not an ordinary one.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before you file
+      options:
+        - label: I read [Troubleshooting](https://fyannk.github.io/pgObjectStoreViewer/docs/operations/troubleshooting/) and it did not cover this.
+          required: true
+        - label: I searched existing issues.
+          required: true
+        - label: This report contains no credentials, destination URLs, object keys, or raw provider errors.
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: >-
+        The version from the startup log or the UI, the container image tag, or
+        `dist/VERSION`. If you built from source, give the commit SHA.
+      placeholder: v0.1.1 / ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1 / commit abc1234
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: What is affected?
+      options:
+        - Startup or configuration
+        - Inventory scan
+        - Backup catalog
+        - WAL, timelines, or gaps
+        - Observed recovery coverage
+        - Web UI (/ or /wals)
+        - Evidence API or pgconsole-sidecar
+        - /healthz or /readyz
+        - Container, Kubernetes, or release artifacts
+        - Documentation
+        - Something else
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options:
+        - s3
+        - azure
+        - gcs
+        - Not applicable
+    validations:
+      required: true
+
+  - type: dropdown
+    id: format
+    attributes:
+      label: Repository format
+      options:
+        - barman-cloud
+        - pgbackrest
+        - Not applicable
+    validations:
+      required: true
+
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: How is it running?
+      options:
+        - Standalone binary
+        - Container
+        - Kubernetes
+        - pgconsole-sidecar
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: >-
+        Name the behavior you expected and, if you can, the page or status term
+        that led you to expect it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: >-
+        Use synthetic values. Include the configuration variables you set, with
+        secrets and paths replaced by obvious placeholders.
+      value: |
+        1. Configure:
+           ```
+           REPOSITORY_FORMAT=barman-cloud
+           PROVIDER=s3
+           DESTINATION_PATH=s3://example-bucket/example-prefix
+           ```
+        2. Start the application.
+        3. Open `/`.
+        4. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: >-
+        Redacted startup log, the readiness state, and the scan-generation facts
+        shown in the UI (generation ID, start and completion timestamps,
+        completeness flags, safety limits reached). See
+        [collecting evidence for a bug report](https://fyannk.github.io/pgObjectStoreViewer/docs/operations/troubleshooting/#collecting-evidence-for-a-bug-report).
+      render: text
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: >-
+        OS and architecture, Kubernetes distribution if relevant, and the tool
+        and version that wrote the backup repository (for example
+        `barman-cloud-backup 3.11`).

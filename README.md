@@ -142,7 +142,17 @@ make docs       # type-check and build the documentation site
 
 Docker-backed provider, scale, and restricted-runtime checks are described in
 the [verification guide](web/docs/reference/checks.md). Read
-[`CONTRIBUTING.md`](CONTRIBUTING.md) before changing behavior.
+[`CONTRIBUTING.md`](CONTRIBUTING.md) before changing behavior, and note that
+participation is governed by the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
+## 🔐 Security
+
+Found a vulnerability? **Do not open a public issue.** Report it privately
+through
+[GitHub Security Advisories](https://github.com/fyannk/pgObjectStoreViewer/security/advisories/new).
+[`SECURITY.md`](SECURITY.md) covers supported versions, what is in and out of
+scope, and how to verify the provenance of what you run.
 
 ## 📄 License
 
