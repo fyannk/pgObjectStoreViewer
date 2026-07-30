@@ -135,6 +135,42 @@ jobs:
           echo "sha=${tag_sha}" >> "${GITHUB_OUTPUT}"
           echo "previous-tag=${previous_tag}" >> "${GITHUB_OUTPUT}"
 
+      - name: Publish API module tag
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ steps.verified.outputs.sha }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          expected_module="github.com/${GITHUB_REPOSITORY}/api"
+          actual_module="$(awk '$1 == "module" { print $2; exit }' api/go.mod)"
+          if [[ "${actual_module}" != "${expected_module}" ]]; then
+            echo "unexpected API module path: ${actual_module}" >&2
+            exit 1
+          fi
+
+          api_tag="api/${TAG}"
+          if git show-ref --verify --quiet "refs/tags/${api_tag}"; then
+            if [[ "$(git cat-file -t "refs/tags/${api_tag}")" != "tag" ]]; then
+              echo "API module tag must be annotated: ${api_tag}" >&2
+              exit 1
+            fi
+            api_sha="$(git rev-list -n 1 "refs/tags/${api_tag}")"
+            if [[ "${api_sha}" != "${RELEASE_SHA}" ]]; then
+              echo "API module tag points to ${api_sha}, expected ${RELEASE_SHA}" >&2
+              exit 1
+            fi
+            echo "API module tag already exists at the release commit: ${api_tag}"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate "${api_tag}" "${RELEASE_SHA}" \
+            --message "pgObjectStoreViewer API ${TAG}"
+          git push origin "refs/tags/${api_tag}"
+
       - name: Set up Go
         uses: actions/setup-go@v7
         with:

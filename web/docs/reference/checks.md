@@ -79,4 +79,5 @@ that complete CI workflow succeeds for an annotated `v*` tag, the release
 workflow publishes the binaries and reports to GitHub Releases and a
 multi-architecture image to `ghcr.io/fyannk/pgobjectstoreviewer`. The registry
 image carries OCI SBOM and provenance attestations; GitHub attestations cover
-the image and standalone binaries.
+the image and standalone binaries. It also publishes the nested Go module as
+the annotated `api/vX.Y.Z` tag at the exact root release commit.
