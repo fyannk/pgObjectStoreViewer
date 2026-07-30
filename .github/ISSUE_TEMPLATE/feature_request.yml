@@ -1,0 +1,64 @@
+name: ✨ Feature request
+description: Propose new evidence, a new format or provider, or a change in behavior.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT]
+        > ObjectStoreViewer reports **structural evidence**. It does not prove
+        > that a restore will succeed, and it has no upload, delete, restore, or
+        > mutation surface — by construction, enforced at build time. Requests
+        > that would add one, or that would let incomplete evidence read as
+        > healthy, will be declined.
+
+        Check the
+        [roadmap](https://fyannk.github.io/pgObjectStoreViewer/docs/roadmap/)
+        first: planned and explicitly out-of-scope work is already recorded
+        there.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: >-
+        Describe the operational situation, not the solution. What do you need
+        to know about a backup repository that you cannot find out today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like it to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What evidence would support that conclusion?
+      description: >-
+        Which object-store metadata would have to be read, and what would the
+        answer be when that metadata is missing, truncated, or unsupported?
+        Every conclusion needs a defined `unknown` case.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What have you tried instead?
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Confirm the proposal fits the project's invariants.
+      options:
+        - label: It needs only list, bounded get, and stat/head operations — no write, copy, delete, or restore.
+          required: true
+        - label: It does not make incomplete, stale, or unsupported evidence read as healthy.
+          required: true
+        - label: It does not require rendering raw backup content.
+          required: true
