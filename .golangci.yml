@@ -1,0 +1,82 @@
+version: "2"
+
+# ObjectStoreViewer is a read-only evidence viewer whose security properties are
+# structural: no mutation surface, no secret disclosure, bounded work. The linter
+# set defends those properties, and gosec is enforced rather than advisory.
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gosec
+    - bodyclose
+    - errorlint
+    - copyloopvar
+    - nilerr
+
+  # unconvert is deliberately NOT enabled. internal/evidenceapi converts between
+  # the internal evidence vocabulary and the public evidence/v1alpha1 enums.
+  # Those are currently aliases, so the conversions look redundant, but they are
+  # the boundary that keeps compiling if the public types ever become distinct.
+
+  settings:
+    staticcheck:
+      checks:
+        - all
+        # The stylecheck naming/comment-form rules golangci-lint disables by
+        # default stay disabled: this repository documents packages and exported
+        # symbols where it adds meaning, not to satisfy a comment shape.
+        - -ST1000
+        - -ST1003
+        - -ST1016
+        - -ST1020
+        - -ST1021
+        - -ST1022
+        # ST1005: error strings in this repository start with product nouns —
+        # "Barman backup metadata has no status", "PostgreSQL ...". Lowercasing
+        # them would misspell the products.
+        - -ST1005
+        # QF*: quickfix refactor suggestions (De Morgan, tagged switch). The
+        # explicit forms here mirror the upstream format grammars they check.
+        - -QF1001
+        - -QF1003
+        # QF1008: naming the embedded PageHeader in a selector documents which
+        # type owns the validation the wire contract depends on.
+        - -QF1008
+    gosec:
+      excludes:
+        # G304 (file inclusion via variable) is inherent to this application:
+        # every credential, CA bundle, and token is deliberately read from an
+        # operator-mounted path. The real controls are the validation in
+        # internal/config and internal/evidenceapi — absolute clean paths, mode
+        # and symlink gates, size ceilings — not a constant filename.
+        - G304
+
+  exclusions:
+    rules:
+      # Tests deliberately construct pathological inputs, fixed-mode files, and
+      # canary credentials. Their security properties are asserted by the proofs,
+      # not by gosec heuristics.
+      - path: _test\.go
+        linters:
+          - gosec
+          - errcheck
+      # Contract-suite helpers are test code in every respect except the
+      # filename.
+      - path: (storetest|providertest)/
+        linters:
+          - gosec
+          - errcheck
+      # option.WithCredentialsJSON is deprecated upstream in favour of
+      # credential files/ADC. Changing how the GCS adapter constructs a
+      # credential is a credential-path change that needs its own proof update,
+      # so it is tracked as follow-up work rather than silenced everywhere.
+      - path: internal/provider/gcs/store\.go
+        text: "SA1019"
+
+formatters:
+  enable:
+    - gofmt
