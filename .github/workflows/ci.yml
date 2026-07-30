@@ -14,7 +14,7 @@ concurrency:
 
 env:
   GO_VERSION: 1.26.5
-  GOLANGCI_LINT_VERSION: v2.6.2
+  GOLANGCI_LINT_VERSION: v2.12.2
 
 jobs:
   test:
@@ -37,9 +37,23 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-      # Build the pinned linter with the repository's Go toolchain. The action's
-      # prebuilt v2.6.2 binary uses Go 1.25 and refuses this Go 1.26 module.
-      - run: make lint
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          args: --config .golangci.yml --timeout 10m
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          working-directory: api
+          args: --config ../.golangci.yml --timeout 10m
+      - name: Repository checks
+        run: |
+          test -z "$(gofmt -l $(find . -name '*.go' -type f))"
+          go -C api vet ./...
+          go vet ./...
+          ./hack/check-boilerplate.sh
+          ./hack/check-readonly.sh
+          go test ./internal/store -run '^TestReaderSurface$'
 
   vuln:
     name: Vulnerability scan
