@@ -356,6 +356,20 @@ make release-check     # all checks plus release artifacts
 Prefer the Make targets over private command variants so local and CI checks
 match. Never invent successful command output.
 
+`make vuln` is the authority on vulnerabilities. OpenSSF Scorecard also reports
+a `Vulnerabilities` score, but it queries OSV at the *module* level and has no
+reachability analysis, so it flags any advisory touching a required module even
+when nothing imports the affected package. Its score is advisory; a govulncheck
+pass is the gate.
+
+The standing example is `GO-2026-5932`, which marks
+`golang.org/x/crypto/openpgp` unmaintained and unsafe by design. It has no
+fixed version and never will, and `golang.org/x/crypto` is an indirect
+requirement reached through `azidentity` → `pkcs12`. `openpgp` is not in the
+build graph, so govulncheck reports it as required-but-not-called. There is no
+action to take; do not chase it, and do not add a dependency override to
+silence it.
+
 Before declaring work complete, run the narrowest applicable tests during
 development and the full affected target set at handoff. At minimum:
 
