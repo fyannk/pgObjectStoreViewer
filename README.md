@@ -97,12 +97,16 @@ Provider-specific identity options are documented in
 
 ## 📦 Run it as a container
 
-Container images are built, scanned, and tested in CI, but are **not yet
-published to a registry**. Build the distroless image locally:
+Versioned, multi-architecture images are published to GitHub Container
+Registry with SBOM and provenance attestations:
 
 ```bash
-make docker-build   # creates objectstoreviewer:dev
+docker pull ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1
 ```
+
+The [latest release](https://github.com/fyannk/pgObjectStoreViewer/releases/latest)
+also provides Linux amd64/arm64 binaries, checksums, an SPDX SBOM, license
+inventory, vulnerability report, and the immutable image digest.
 
 For Kubernetes, adapt the hardened
 [`deploy/kubernetes-example.yaml`](deploy/kubernetes-example.yaml) manifest and
