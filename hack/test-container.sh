@@ -48,7 +48,7 @@ test "$(docker inspect --format '{{.HostConfig.CapDrop}}' "$container")" = "[ALL
 test -n "$(docker inspect --format '{{index .HostConfig.Tmpfs "/tmp"}}' "$container")"
 
 docker export "$container" > "$filesystem_archive"
-if tar -tf "$filesystem_archive" | rg '(^|/)(src|go)/.+|(^|/)(apk|apt|apt-get|dpkg|rpm|yum|dnf)$|(^|/)bin/(ba)?sh$'; then
+if tar -tf "$filesystem_archive" | grep -E '(^|/)(src|go)/.+|(^|/)(apk|apt|apt-get|dpkg|rpm|yum|dnf)$|(^|/)bin/(ba)?sh$'; then
   echo "runtime image contains source, a package manager, or a shell" >&2
   exit 1
 fi

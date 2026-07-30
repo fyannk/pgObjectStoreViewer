@@ -30,10 +30,10 @@ fi
 # go-licenses cannot associate a replace-backed local module with the repository
 # root license. Record that local module explicitly while leaving every external
 # dependency subject to the Unknown/Forbidden gate above.
-rg -q '^                                 Apache License$$' LICENSE
+grep -q '^                                 Apache License$' LICENSE
 printf '%s,LICENSE,Apache-2.0\n' "$api_module" >> "$artifact_dir/licenses.csv"
 LC_ALL=C sort -o "$artifact_dir/licenses.csv" "$artifact_dir/licenses.csv"
-if rg -n ',Unknown$|,Forbidden$' "$artifact_dir/licenses.csv"; then
+if grep -En ',(Unknown|Forbidden)$' "$artifact_dir/licenses.csv"; then
     echo 'license report contains an unresolved or forbidden license' >&2
     exit 1
 fi
