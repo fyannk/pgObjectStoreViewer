@@ -125,7 +125,7 @@ func TestTimelineHistoryBoundsFailUnknown(t *testing.T) {
 
 	var entries strings.Builder
 	for index := 1; index <= MaxHistoryEntries+1; index++ {
-		entries.WriteString(fmt.Sprintf("%d\t0/%08X\tbranch\n", index, index))
+		_, _ = fmt.Fprintf(&entries, "%d\t0/%08X\tbranch\n", index, index)
 	}
 	if _, err := ParseHistory([]byte(entries.String()), MaxHistoryEntries+2, 16<<20); err == nil {
 		t.Fatal("history entry ceiling was not enforced")
