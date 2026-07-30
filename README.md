@@ -142,7 +142,9 @@ make docs       # type-check and build the documentation site
 
 Docker-backed provider, scale, and restricted-runtime checks are described in
 the [verification guide](web/docs/reference/checks.md). Read
-[`CONTRIBUTING.md`](CONTRIBUTING.md) before changing behavior.
+[`CONTRIBUTING.md`](CONTRIBUTING.md) before changing behavior, and note that
+participation is governed by the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## 🔐 Security
 

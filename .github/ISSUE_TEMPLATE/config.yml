@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔐 Report a security vulnerability
+    url: https://github.com/fyannk/pgObjectStoreViewer/security/advisories/new
+    about: >-
+      Report privately. Never open a public issue with reproduction details for
+      a disclosure, mutation-surface, or scope-escape problem. See SECURITY.md.
+  - name: 📚 Documentation
+    url: https://fyannk.github.io/pgObjectStoreViewer/
+    about: >-
+      The evidence model, status vocabulary, configuration reference, and the
+      troubleshooting guide answer most questions.
+  - name: 🗺️ Roadmap
+    url: https://fyannk.github.io/pgObjectStoreViewer/docs/roadmap/
+    about: >-
+      Planned and explicitly out-of-scope work is tracked here. Check it before
+      asking for a feature.
