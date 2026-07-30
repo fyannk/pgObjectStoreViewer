@@ -2,6 +2,10 @@
 .github
 bin
 dist
+artifacts
 proofs
+release
+web/build
+web/node_modules
 *.out
 coverage.txt

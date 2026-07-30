@@ -1,0 +1,321 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to publish
+        required: true
+        type: string
+
+# A release can write only after the ordinary CI workflow has passed for the
+# exact annotated tag. The workflow-run trigger also keeps release credentials
+# out of the pull-request workflow.
+permissions:
+  actions: read
+  artifact-metadata: write
+  attestations: write
+  contents: write
+  id-token: write
+  packages: write
+
+concurrency:
+  group: release-${{ github.event.workflow_run.head_branch || inputs.tag || github.run_id }}
+  cancel-in-progress: false
+
+env:
+  IMAGE_NAME: ghcr.io/fyannk/pgobjectstoreviewer
+
+jobs:
+  publish:
+    name: Publish release
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       startsWith(github.event.workflow_run.head_branch, 'v'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Resolve release tag
+        id: release
+        shell: bash
+        env:
+          DISPATCH_TAG: ${{ inputs.tag }}
+          TRIGGER_EVENT: ${{ github.event.workflow_run.event }}
+          TRIGGER_SHA: ${{ github.event.workflow_run.head_sha }}
+          TRIGGER_TAG: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            tag="${DISPATCH_TAG}"
+            expected_sha=""
+          else
+            [[ "${TRIGGER_EVENT}" == "push" ]]
+            tag="${TRIGGER_TAG}"
+            expected_sha="${TRIGGER_SHA}"
+          fi
+
+          if [[ ! "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "release tag must be semantic and start with v: ${tag}" >&2
+            exit 1
+          fi
+
+          prerelease=false
+          if [[ "${tag}" == *-* ]]; then
+            prerelease=true
+          fi
+
+          echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+          echo "expected-sha=${expected_sha}" >> "${GITHUB_OUTPUT}"
+          echo "prerelease=${prerelease}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: refs/tags/${{ steps.release.outputs.tag }}
+
+      - name: Verify tag and successful CI
+        id: verified
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ steps.release.outputs.expected-sha }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$(git cat-file -t "refs/tags/${TAG}")" != "tag" ]]; then
+            echo "release tag must be annotated: ${TAG}" >&2
+            exit 1
+          fi
+
+          tag_sha="$(git rev-list -n 1 "refs/tags/${TAG}")"
+          if [[ -n "${EXPECTED_SHA}" ]]; then
+            if [[ "${tag_sha}" != "${EXPECTED_SHA}" ]]; then
+              echo "tag moved after CI completed" >&2
+              exit 1
+            fi
+          else
+            successful_run="$(
+              gh api --method GET \
+                "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs" \
+                -f branch="${TAG}" \
+                -f event=push \
+                -f status=success \
+                -f per_page=100 \
+                --jq "[.workflow_runs[] | select(.head_sha == \"${tag_sha}\")][0].id // empty"
+            )"
+            if [[ -z "${successful_run}" ]]; then
+              echo "no successful CI run exists for ${TAG} at ${tag_sha}" >&2
+              exit 1
+            fi
+          fi
+
+          previous_tag="$(
+            git tag --merged "${tag_sha}" --list 'v[0-9]*' --sort=-version:refname \
+              | awk -v current="${TAG}" '$0 != current { print; exit }'
+          )"
+
+          echo "sha=${tag_sha}" >> "${GITHUB_OUTPUT}"
+          echo "previous-tag=${previous_tag}" >> "${GITHUB_OUTPUT}"
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build release assets and supply-chain reports
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: >-
+          make package supply-chain
+          VERSION="${TAG}"
+          IMAGE="objectstoreviewer:${TAG}"
+
+      - name: Attest release binaries
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            dist/objectstoreviewer-linux-amd64
+            dist/objectstoreviewer-linux-arm64
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare container metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.release.outputs.tag }}
+            type=semver,pattern={{version}},value=${{ steps.release.outputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.release.outputs.tag }},enable=${{ steps.release.outputs.prerelease == 'false' }}
+            type=raw,value=latest,enable=${{ steps.release.outputs.prerelease == 'false' }}
+          labels: |
+            org.opencontainers.image.title=pgObjectStoreViewer
+            org.opencontainers.image.description=Read-only PostgreSQL backup evidence viewer for object storage
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.documentation=https://fyannk.github.io/pgObjectStoreViewer/
+            org.opencontainers.image.version=${{ steps.release.outputs.tag }}
+            org.opencontainers.image.revision=${{ steps.verified.outputs.sha }}
+            org.opencontainers.image.licenses=Apache-2.0
+
+      - name: Build and publish container image
+        id: image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: mode=max
+          sbom: true
+
+      - name: Attest container image
+        uses: actions/attest@v4
+        with:
+          subject-name: ${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.image.outputs.digest }}
+          push-to-registry: true
+
+      - name: Record published container digest
+        env:
+          DIGEST: ${{ steps.image.outputs.digest }}
+        run: printf '%s@%s\n' "${IMAGE_NAME}" "${DIGEST}" > artifacts/release/container-image.txt
+
+      - name: Prepare release notes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIOUS_TAG: ${{ steps.verified.outputs.previous-tag }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p release
+
+          awk -v heading="## ${TAG} " '
+            index($0, heading) == 1 { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+            END { if (!found) exit 1 }
+          ' web/docs/release-notes.md > release/highlights.md
+
+          if [[ -n "${PREVIOUS_TAG}" ]] && \
+             gh release view "${PREVIOUS_TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+              -f tag_name="${TAG}" \
+              -f target_commitish="${{ steps.verified.outputs.sha }}" \
+              -f previous_tag_name="${PREVIOUS_TAG}" \
+              --jq .body > release/generated.md
+          elif [[ -n "${PREVIOUS_TAG}" ]]; then
+            printf '**Full Changelog**: https://github.com/%s/compare/%s...%s\n' \
+              "${GITHUB_REPOSITORY}" "${PREVIOUS_TAG}" "${TAG}" \
+              > release/generated.md
+          else
+            printf '**Source at this release**: https://github.com/%s/tree/%s\n' \
+              "${GITHUB_REPOSITORY}" "${TAG}" \
+              > release/generated.md
+          fi
+
+          {
+            echo '## ✨ Highlights'
+            cat release/highlights.md
+            echo
+            echo '## 📦 Install'
+            echo
+            echo '```bash'
+            echo "docker pull ${IMAGE_NAME}:${TAG}"
+            echo '```'
+            echo
+            echo 'The image supports `linux/amd64` and `linux/arm64`. Versioned binaries, checksums, an SPDX SBOM, license inventory, vulnerability report, and the immutable container digest are attached below.'
+            echo
+            echo '## 🔐 Verify provenance'
+            echo
+            echo '```bash'
+            echo "gh attestation verify oci://${IMAGE_NAME}:${TAG} -R ${GITHUB_REPOSITORY}"
+            echo '```'
+            echo
+            cat release/generated.md
+          } > release/notes.md
+
+      - name: Publish GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          assets=(
+            dist/objectstoreviewer-linux-amd64
+            dist/objectstoreviewer-linux-arm64
+            dist/SHA256SUMS
+            dist/VERSION
+            artifacts/release/container-image.txt
+            artifacts/release/image-digest.json
+            artifacts/release/licenses.csv
+            artifacts/release/sbom.spdx.json
+            artifacts/release/vulnerability.json
+          )
+
+          release_flags=()
+          if [[ "${PRERELEASE}" == "true" ]]; then
+            release_flags+=(--prerelease --latest=false)
+          else
+            release_flags+=(--prerelease=false --latest)
+          fi
+
+          existing_draft="$(
+            gh release view "${TAG}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --json isDraft \
+              --jq .isDraft \
+              2>/dev/null || true
+          )"
+          if [[ "${existing_draft}" == "false" ]]; then
+            echo "release ${TAG} is already published"
+            exit 0
+          fi
+
+          if [[ "${existing_draft}" == "true" ]]; then
+            gh release upload "${TAG}" "${assets[@]}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --clobber
+            gh release edit "${TAG}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "pgObjectStoreViewer ${TAG}" \
+              --notes-file release/notes.md \
+              --draft=false \
+              "${release_flags[@]}"
+          else
+            gh release create "${TAG}" "${assets[@]}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --verify-tag \
+              --title "pgObjectStoreViewer ${TAG}" \
+              --notes-file release/notes.md \
+              "${release_flags[@]}"
+          fi
