@@ -1,0 +1,132 @@
+name: 🔍 Evidence mismatch or format edge case
+description: The reported evidence does not match what is really in the repository, or a layout is misread.
+labels: ["bug", "evidence"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when the application *runs fine* but its **conclusion is
+        wrong** — a backup classified incorrectly, a gap that should not exist,
+        a WAL misread, a status that overstates or understates the evidence, or
+        a repository layout the format reader does not handle.
+
+        This is the most useful kind of report this project receives. A
+        reproducible fixture is worth more than a description.
+
+        > [!CAUTION]
+        > **Never paste credentials, destination URLs, production bucket names,
+        > real object keys, or raw provider errors.** Rename keys to synthetic
+        > equivalents that preserve the *shape* — the structure is what matters,
+        > the names are not.
+
+        > [!IMPORTANT]
+        > Some "wrong" results are correct by design. `unknown` is a real
+        > answer: incomplete, stale, truncated, unsupported, or failed evidence
+        > can never become `healthy`. Read the
+        > [evidence model](https://fyannk.github.io/pgObjectStoreViewer/docs/overview/evidence-model/)
+        > and the
+        > [status vocabulary](https://fyannk.github.io/pgObjectStoreViewer/docs/reference/status-vocabulary/)
+        > before concluding that a conservative answer is a bug.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before you file
+      options:
+        - label: I read the evidence model and the status vocabulary, and this is not the documented conservative behavior.
+          required: true
+        - label: This report contains no credentials, destination URLs, or real object keys.
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: v0.1.1 / commit abc1234
+    validations:
+      required: true
+
+  - type: dropdown
+    id: format
+    attributes:
+      label: Repository format
+      options:
+        - barman-cloud
+        - pgbackrest
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options:
+        - s3
+        - azure
+        - gcs
+    validations:
+      required: true
+
+  - type: input
+    id: writer
+    attributes:
+      label: What wrote the repository?
+      description: The tool and exact version, and anything unusual about how it was configured.
+      placeholder: barman-cloud-backup 3.11, snappy compression, encryption at rest
+    validations:
+      required: true
+
+  - type: textarea
+    id: reported
+    attributes:
+      label: What does the application report?
+      description: >-
+        Quote the exact status, classification, completeness, failure category,
+        or stop reason. Include the scan-generation facts (generation ID,
+        completeness flags, safety limits reached).
+    validations:
+      required: true
+
+  - type: textarea
+    id: truth
+    attributes:
+      label: What is actually in the repository?
+      description: >-
+        Explain what you verified independently and how — a `barman-cloud-check`
+        run, a manual listing, the backup manifest. Say what evidence you have
+        for the correct answer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: layout
+    attributes:
+      label: Repository shape
+      description: >-
+        The relevant object keys with the bucket and prefix replaced by
+        placeholders, plus sizes and timestamps where they matter. Preserve the
+        structure exactly; rename freely.
+      render: text
+      value: |
+        example-prefix/example-server/base/20260101T000000/backup.info
+        example-prefix/example-server/base/20260101T000000/data.tar
+        example-prefix/example-server/wals/0000000100000000/000000010000000000000001.gz
+    validations:
+      required: true
+
+  - type: textarea
+    id: metadata
+    attributes:
+      label: Format metadata
+      description: >-
+        The redacted contents of the relevant `backup.info`, `backup.manifest`,
+        `backup_label`, or timeline history file. Replace paths and hostnames
+        with placeholders; keep every structural field.
+      render: text
+
+  - type: checkboxes
+    id: fixture
+    attributes:
+      label: Fixture
+      options:
+        - label: I can contribute a small synthetic fixture reproducing this under `testdata/`.
