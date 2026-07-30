@@ -1,0 +1,5 @@
+{
+  "api_version": "evidence.objectstoreviewer.io/v1alpha1",
+  "kind": "ReadinessStatus",
+  "status": "not-ready"
+}

@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: objectstoreviewer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: objectstoreviewer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: objectstoreviewer
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: viewer
+          image: objectstoreviewer:dev
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: REPOSITORY_FORMAT
+              value: barman-cloud
+            - name: PROVIDER
+              value: s3
+            - name: DESTINATION_PATH
+              value: s3://example-backups/repository
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 16Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: objectstoreviewer-internal
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: objectstoreviewer
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+---
+# The authentication proxy is a separate pgtoolbox-managed workload. It must
+# carry this label, remove client-supplied identity headers, authenticate the
+# request, and then forward to objectstoreviewer-internal:3000. Do not create
+# an Ingress or external Service that selects the viewer directly.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: objectstoreviewer-auth-proxy-only
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: objectstoreviewer
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: auth-proxy
+      ports:
+        - protocol: TCP
+          port: 3000

@@ -1,0 +1,24 @@
+[
+  {
+    "name": "aws-default-empty-prefix",
+    "endpoint": "",
+    "region": "eu-west-1",
+    "bucket": "Backup-Bucket",
+    "prefix": "",
+    "format": "barman-cloud",
+    "scope_kind": "barman-server",
+    "scope_name": "orders",
+    "fingerprint": "sha256:36057782c2940be081e61bc86c34164d8e5dc18e70d16a465070de20467e1261"
+  },
+  {
+    "name": "compatible-origin-canonicalization",
+    "endpoint": "HTTPS://MinIO.Example.TEST:443/",
+    "region": "us-east-1",
+    "bucket": "backup-bucket",
+    "prefix": "team/Orders",
+    "format": "barman-cloud",
+    "scope_kind": "barman-server",
+    "scope_name": "Orders",
+    "fingerprint": "sha256:036dbdfb878c354fb51f7fde145db7d3b56d8bda1cd90671f04724fee797d498"
+  }
+]

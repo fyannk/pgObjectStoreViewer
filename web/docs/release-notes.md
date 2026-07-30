@@ -1,0 +1,82 @@
+---
+sidebar_position: 7
+---
+
+# Release notes
+
+## Milestone status
+
+| Milestone | State | Scope |
+|---|---|---|
+| **v0** | shipped | honest Barman Cloud inventory over S3 |
+| **v0.5** | shipped | the same normalized catalog and rendered evidence over S3, Azure Blob Storage, and GCS, byte-identical |
+| **v1** | shipped | Barman timeline ancestry, backup consistency ranges, conservative observed recovery coverage |
+| **v1.5** | not shipped | pgBackRest metadata source, backup catalog, archive continuity, and recovery coverage |
+| **v2** | not shipped | controlled operational extras: metrics, opt-in raw download, multiple stores |
+
+The production runtime currently includes **Slices 0 through 5**.
+
+## What shipped, by slice
+
+| Slice | Delivered |
+|---|---|
+| 0 | secure multi-format runtime foundation: the frozen configuration contract, the read-only store surface, redaction, health/readiness, the restricted container |
+| 1 | S3 inventory from store to browser: the bounded background scanner, the atomic snapshot, the cached inventory page, million-object scale evidence |
+| 2 | honest Barman Cloud backup catalog: `backup.info` parsing, artifact validation, separate reporting of completed/in-progress/failed/malformed/unsupported/incomplete backups |
+| 3 | provider parity: the Azure and GCS adapters behind the same contract, with pinned Azurite and fake-gcs-server journeys |
+| 4 | Barman WAL continuity and the gap lifecycle: metadata-sized segment arithmetic, compact ranges, candidate/confirmed gaps, the cached WAL browser |
+| 5 | Barman timeline graph and observed recovery coverage: bounded history parsing for every supported compression, conservative path rendering |
+| 13 (steps 1–5) | the pgConsole producer: the dependency-light `api` module, the generated schema and wire goldens, the immutable publication engine, the authenticated Unix-socket channel, the executable sidecar runtime, and the producer container filesystem profiles |
+
+## Not yet available
+
+- **pgBackRest interpretation.** `REPOSITORY_FORMAT=pgbackrest` validates and
+  produces inventory, but metadata and dependency chains are not interpreted.
+  Milestone v1.5.
+- **Retention policy interpretation.** `EXPECTED_RETENTION_POLICY` is displayed
+  as configured; the derived status stays unknown until Slice 8.
+- **Metrics.** Slice 9.
+- **Raw object download.** Slice 10, opt-in via `ALLOW_DOWNLOAD`. No usable
+  download route or link exists today.
+- **Multiple stores or formats per process.** Slice 11.
+- **A qualified pgConsole pair.** The producer is executable and proven at its
+  own boundary; a live cross-check demonstration, published per-profile resource
+  sizing, and the first complete pgtoolbox qualification profile remain release
+  gates.
+
+## Known behaviors that look like bugs
+
+These are intended, and each has a test asserting it:
+
+- **Gap confirmation is lost on restart.** Confirmation is process-local, so
+  confirmed gaps return to candidate (`warning`) after a restart until a second
+  consecutive complete scan re-confirms them.
+- **Truncated WAL diagnostics force `unknown`** even when every visible complete
+  segment is contiguous.
+- **Multiple complete representations of one WAL position force `unknown`.** The
+  application will not guess which one a restore command would choose.
+- **An empty prefix is ready** and reports a complete inventory with zero
+  totals.
+- **A failed refresh keeps the previous evidence** and marks it stale; on the
+  *first* failed refresh, totals are `null` rather than `0`.
+- **Startup errors name no values.** Not even the offending path.
+
+## Compatibility
+
+The single-repository configuration contract was frozen by the Slice 0 decision
+gate on **2026-07-27**. A removed or re-validated variable fails startup rather
+than being silently ignored.
+
+The evidence API is `evidence.objectstoreviewer.io/v1alpha1` and is additive-only
+within the version: new fields may appear, and consumers must ignore what they do
+not recognize. Unrecognized typed-details tags are discarded.
+
+## Verified environments
+
+| Environment | Evidence |
+|---|---|
+| Barman Cloud 3.19.1 repositories | genuine backup and WAL journey in pinned MinIO, inside `make test-integration` |
+| S3 / MinIO, Azure / Azurite, GCS / fake-gcs-server | `make test-provider-parity`, byte-identical normalized output |
+| linux/amd64 and linux/arm64 images | `make test-multiarch` |
+| Restricted container runtime | `make test-container`: arbitrary UID/GID, read-only root, dropped capabilities, no-new-privileges, SIGTERM |
+| OpenShift 4.20 under `restricted-v2` | live sidecar Pod and channel mechanics, 2026-07-29 |

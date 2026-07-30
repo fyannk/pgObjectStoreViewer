@@ -1,0 +1,29 @@
+/**
+ * ObjectStoreViewer docs theme overrides.
+ */
+
+:root {
+  --ifm-color-primary: #0f766e;
+  --ifm-color-primary-dark: #0d6960;
+  --ifm-color-primary-darker: #0c635a;
+  --ifm-color-primary-darkest: #0a514a;
+  --ifm-color-primary-light: #11837c;
+  --ifm-color-primary-lighter: #128984;
+  --ifm-color-primary-lightest: #159b95;
+  --ifm-code-font-size: 95%;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #2dd4bf;
+  --ifm-color-primary-dark: #14c9b2;
+  --ifm-color-primary-darker: #13bea8;
+  --ifm-color-primary-darkest: #0f9c8a;
+  --ifm-color-primary-light: #52dcca;
+  --ifm-color-primary-lighter: #65e0d0;
+  --ifm-color-primary-lightest: #9aebe1;
+}
+
+/* The status vocabulary appears in many tables; keep code spans legible. */
+table code {
+  white-space: nowrap;
+}
