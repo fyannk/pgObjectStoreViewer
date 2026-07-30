@@ -1,9 +1,9 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       tag:
@@ -12,8 +12,8 @@ on:
         type: string
 
 # A release can write only after the ordinary CI workflow has passed for the
-# exact annotated tag. The workflow-run trigger also keeps release credentials
-# out of the pull-request workflow.
+# exact annotated tag. Tag pushes and maintainer dispatches keep release
+# credentials out of the pull-request workflow.
 permissions:
   actions: read
   artifact-metadata: write
@@ -23,7 +23,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: release-${{ github.event.workflow_run.head_branch || inputs.tag || github.run_id }}
+  group: release-${{ inputs.tag || github.ref_name || github.run_id }}
   cancel-in-progress: false
 
 env:
@@ -32,11 +32,6 @@ env:
 jobs:
   publish:
     name: Publish release
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.event == 'push' &&
-       github.event.workflow_run.conclusion == 'success' &&
-       startsWith(github.event.workflow_run.head_branch, 'v'))
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -45,9 +40,6 @@ jobs:
         shell: bash
         env:
           DISPATCH_TAG: ${{ inputs.tag }}
-          TRIGGER_EVENT: ${{ github.event.workflow_run.event }}
-          TRIGGER_SHA: ${{ github.event.workflow_run.head_sha }}
-          TRIGGER_TAG: ${{ github.event.workflow_run.head_branch }}
         run: |
           set -euo pipefail
 
@@ -55,9 +47,9 @@ jobs:
             tag="${DISPATCH_TAG}"
             expected_sha=""
           else
-            [[ "${TRIGGER_EVENT}" == "push" ]]
-            tag="${TRIGGER_TAG}"
-            expected_sha="${TRIGGER_SHA}"
+            [[ "${GITHUB_REF}" == refs/tags/v* ]]
+            tag="${GITHUB_REF_NAME}"
+            expected_sha="${GITHUB_SHA}"
           fi
 
           if [[ ! "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
@@ -96,25 +88,43 @@ jobs:
           fi
 
           tag_sha="$(git rev-list -n 1 "refs/tags/${TAG}")"
-          if [[ -n "${EXPECTED_SHA}" ]]; then
-            if [[ "${tag_sha}" != "${EXPECTED_SHA}" ]]; then
-              echo "tag moved after CI completed" >&2
-              exit 1
-            fi
-          else
-            successful_run="$(
+          if [[ -n "${EXPECTED_SHA}" ]] && [[ "${tag_sha}" != "${EXPECTED_SHA}" ]]; then
+            echo "tag moved after the release workflow started" >&2
+            exit 1
+          fi
+
+          successful_run=""
+          for attempt in {1..120}; do
+            run="$(
               gh api --method GET \
                 "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs" \
                 -f branch="${TAG}" \
                 -f event=push \
-                -f status=success \
                 -f per_page=100 \
-                --jq "[.workflow_runs[] | select(.head_sha == \"${tag_sha}\")][0].id // empty"
+                --jq "[.workflow_runs[] | select(.head_sha == \"${tag_sha}\")][0] | [.id, .status, (.conclusion // \"\")] | @tsv"
             )"
-            if [[ -z "${successful_run}" ]]; then
-              echo "no successful CI run exists for ${TAG} at ${tag_sha}" >&2
+            if [[ -z "${run}" ]]; then
+              echo "waiting for CI to start for ${TAG} (${attempt}/120)"
+              sleep 10
+              continue
+            fi
+
+            IFS=$'\t' read -r run_id run_status run_conclusion <<< "${run}"
+            if [[ "${run_status}" != "completed" ]]; then
+              echo "waiting for CI run ${run_id} (${attempt}/120)"
+              sleep 10
+              continue
+            fi
+            if [[ "${run_conclusion}" != "success" ]]; then
+              echo "CI run ${run_id} completed with ${run_conclusion}" >&2
               exit 1
             fi
+            successful_run="${run_id}"
+            break
+          done
+          if [[ -z "${successful_run}" ]]; then
+            echo "CI did not complete for ${TAG} within 20 minutes" >&2
+            exit 1
           fi
 
           previous_tag="$(
@@ -211,6 +221,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PREVIOUS_TAG: ${{ steps.verified.outputs.previous-tag }}
           TAG: ${{ steps.release.outputs.tag }}
+          TAG_SHA: ${{ steps.verified.outputs.sha }}
         run: |
           set -euo pipefail
           mkdir -p release
@@ -227,7 +238,7 @@ jobs:
             gh api --method POST \
               "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
               -f tag_name="${TAG}" \
-              -f target_commitish="${{ steps.verified.outputs.sha }}" \
+              -f target_commitish="${TAG_SHA}" \
               -f previous_tag_name="${PREVIOUS_TAG}" \
               --jq .body > release/generated.md
           elif [[ -n "${PREVIOUS_TAG}" ]]; then
