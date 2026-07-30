@@ -144,6 +144,14 @@ Docker-backed provider, scale, and restricted-runtime checks are described in
 the [verification guide](web/docs/reference/checks.md). Read
 [`CONTRIBUTING.md`](CONTRIBUTING.md) before changing behavior.
 
+## 🔐 Security
+
+Found a vulnerability? **Do not open a public issue.** Report it privately
+through
+[GitHub Security Advisories](https://github.com/fyannk/pgObjectStoreViewer/security/advisories/new).
+[`SECURITY.md`](SECURITY.md) covers supported versions, what is in and out of
+scope, and how to verify the provenance of what you run.
+
 ## 📄 License
 
 ObjectStoreViewer is available under the

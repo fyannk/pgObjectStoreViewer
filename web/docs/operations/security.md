@@ -121,5 +121,12 @@ boundary. The auth proxy must not carry either volume. See
 ## Reporting a vulnerability
 
 Do not open a public issue with reproduction details for a disclosure problem.
-Report it privately to the maintainers with the redacted evidence described in
+Report it privately through [GitHub Security
+Advisories](https://github.com/fyannk/pgObjectStoreViewer/security/advisories/new),
+with the redacted evidence described in
 [troubleshooting](troubleshooting.md#collecting-evidence-for-a-bug-report).
+
+[`SECURITY.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/SECURITY.md)
+records the supported versions, the response targets, and which findings are in
+scope — in particular that the absence of authentication, authorization, and
+TLS in the application is documented design, not a vulnerability.
