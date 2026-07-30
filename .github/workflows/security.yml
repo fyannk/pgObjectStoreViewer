@@ -1,0 +1,48 @@
+name: Scheduled security scan
+
+# CI only runs govulncheck when something is pushed. A vulnerability disclosed
+# against a dependency of an already-released version would therefore stay
+# invisible until the next change landed. This workflow re-scans every
+# supported branch on a schedule, so a new advisory surfaces against the code
+# that is actually deployed rather than against the next commit.
+#
+# Dependabot covers the module graph; govulncheck covers reachability. They
+# disagree often enough to be worth running both.
+on:
+  schedule:
+    # Tuesday 05:15 UTC, after Monday's Dependabot runs have opened their PRs.
+    - cron: '15 5 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scheduled-security-scan
+  cancel-in-progress: false
+
+jobs:
+  vuln:
+    name: govulncheck (${{ matrix.branch }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # Every branch listed as supported in SECURITY.md.
+        branch: [main, release-0.1]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ matrix.branch }}
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          # Track the branch's own toolchain: a maintenance branch is scanned
+          # with the Go version it actually ships with.
+          go-version-file: go.mod
+          cache: true
+
+      - name: Scan for known vulnerabilities
+        run: make vuln
