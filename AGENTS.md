@@ -175,6 +175,13 @@ welcome when the current slice exercises them end to end.
 - New dependencies require a concrete need, an active maintenance/security
   check, compatible licensing, and a note in the change. Prefer the standard
   library and already-selected official SDKs.
+- Every GitHub Action is pinned to a full commit SHA with the human-readable
+  version in a trailing comment, and container base images are pinned by
+  digest. A tag is mutable; the release workflow can push tags, images, and
+  attestations, so a moved tag there is a supply-chain compromise. Never
+  replace a SHA with a tag — Dependabot updates the pins and keeps the comment.
+  Keep `persist-credentials: false` on every checkout except the release job,
+  which needs the token to push the nested `api/` module tag.
 - Do not add compatibility shims, feature flags, or fallback behavior without
   a documented lifecycle and tests.
 - Do not weaken a test or check merely to make a change pass. Fix the behavior
