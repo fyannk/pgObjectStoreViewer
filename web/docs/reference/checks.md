@@ -14,6 +14,7 @@ maintain separate slice, milestone, or acceptance-ID taxonomies.
 |---|---|
 | `make build` | build `bin/objectstoreviewer` |
 | `make test` | hermetic unit tests in both Go modules |
+| `make test-fuzz` | mutate bounded Barman metadata, timeline, WAL-name, and signed-cursor inputs for five seconds per target with one worker |
 | `make test-race` | the complete unit suite under the race detector |
 | `make test-stress` | repeated publication, channel, runtime, and probe lifecycle tests under the race detector |
 | `make check-api` | the API module's zero-dependency boundary and generated-artifact drift check |
@@ -70,7 +71,7 @@ where new behavior must add its pathological cases.
 
 ## CI
 
-Every pull request runs build/unit/race/stress/API checks, lint and static
+Every pull request runs build/unit/fuzz/race/stress/API checks, lint and static
 analysis, vulnerability scanning, documentation, Barman/provider integration,
 the bounded-resource suite, and both restricted container profiles. A push to
 `main` additionally builds release binaries, checks amd64 and arm64 images, and

@@ -325,6 +325,9 @@ explicitly asks. When commits are requested:
   tests for snapshot/gap state machines.
 - Scale tests prove bounded retention and failure-to-unknown, not merely that a
   happy scan eventually completes.
+- Native fuzz targets cover bounded untrusted-input parsers and codecs. Keep
+  their seed corpus synthetic, assert domain invariants rather than crashes
+  alone, and run each target with the bounded `make test-fuzz` worker budget.
 - Negative tests are mandatory for redaction, prefix isolation, incomplete
   scans, unsupported metadata, disabled downloads, and restricted runtime.
 - Add or update the narrowest relevant test and its reproducible Make target in
@@ -336,6 +339,7 @@ explicitly asks. When commits are requested:
 ```bash
 make build             # build the binary
 make test              # unit tests, both modules
+make test-fuzz         # bounded native fuzzing of parsers and cursors
 make test-race         # race detector, both modules
 make test-stress       # repeated concurrency and lifecycle tests
 make check-api         # dependency boundary and generated API drift

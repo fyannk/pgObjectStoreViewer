@@ -3,11 +3,12 @@ IMAGE ?= objectstoreviewer:dev
 GOVULNCHECK_VERSION ?= v1.6.0
 GOLANGCI_LINT_VERSION ?= v2.12.2
 GOLANGCI_LINT ?= $(GO) run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
+FUZZ_TIME ?= 5s
 DIST_DIR ?= dist
 ARTIFACT_DIR ?= artifacts
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
-.PHONY: build test test-api test-race test-stress test-integration test-barman-fixtures test-s3 test-azure test-gcs test-provider-parity test-scale test-container test-multiarch lint golangci-lint check-api vuln check docs package docker-build supply-chain release-check generate-evidence-artifacts
+.PHONY: build test test-api test-fuzz test-race test-stress test-integration test-barman-fixtures test-s3 test-azure test-gcs test-provider-parity test-scale test-container test-multiarch lint golangci-lint check-api vuln check docs package docker-build supply-chain release-check generate-evidence-artifacts
 
 build:
 	mkdir -p bin
@@ -18,6 +19,14 @@ test: test-api
 
 test-api:
 	$(GO) -C api test ./...
+
+# Exercise each untrusted-input fuzz boundary with one worker and a fixed time
+# budget. Ordinary `make test` still runs every committed seed as a unit test.
+test-fuzz:
+	$(GO) test ./internal/formats/barmancloud -run '^$$' -fuzz '^FuzzParseBackupInfo$$' -fuzztime=$(FUZZ_TIME) -parallel=1
+	$(GO) test ./internal/formats/barmancloud -run '^$$' -fuzz '^FuzzParseTimelineHistory$$' -fuzztime=$(FUZZ_TIME) -parallel=1
+	$(GO) test ./internal/formats/barmancloud -run '^$$' -fuzz '^FuzzParseWALName$$' -fuzztime=$(FUZZ_TIME) -parallel=1
+	$(GO) test ./internal/provider/cursor -run '^$$' -fuzz '^FuzzCodec$$' -fuzztime=$(FUZZ_TIME) -parallel=1
 
 test-race:
 	$(GO) -C api test -race ./...
@@ -86,7 +95,7 @@ vuln:
 	$(GO) run golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION) ./...
 
 # Complete local validation that does not require Docker.
-check: lint test test-race test-stress check-api vuln
+check: lint test test-fuzz test-race test-stress check-api vuln
 
 docs:
 	cd web && npm ci && npm run typecheck && npm run build

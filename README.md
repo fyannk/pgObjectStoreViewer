@@ -137,6 +137,7 @@ requests are welcome. Start with:
 
 ```bash
 make test       # fast, hermetic unit suite
+make test-fuzz  # bounded fuzzing of untrusted metadata and cursors
 make check      # complete non-Docker verification
 make docs       # type-check and build the documentation site
 ```

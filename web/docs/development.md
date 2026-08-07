@@ -52,7 +52,8 @@ implementation from the `api` module.
 ```bash
 make build
 make test
-make check       # lint + unit + race + stress + API drift + vuln
+make test-fuzz   # bounded mutation of untrusted parser and cursor inputs
+make check       # lint + unit + fuzz + race + stress + API drift + vuln
 ```
 
 `make lint` runs gofmt, `go vet`, the license-boilerplate check, the read-only
