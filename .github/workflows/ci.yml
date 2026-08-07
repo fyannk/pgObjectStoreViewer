@@ -32,7 +32,7 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-      - run: make build test test-race test-stress check-api
+      - run: make build test test-fuzz test-race test-stress check-api
 
   lint:
     name: Lint and static analysis
