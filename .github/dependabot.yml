@@ -122,6 +122,12 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "build(deps)"
+    ignore:
+      # Same hold as the main-targeting npm entry above: Docusaurus 3 needs
+      # tsconfig baseUrl, which TypeScript 7 removed (error TS5102). Drop both
+      # rules together when Docusaurus 4 ships TypeScript 7 support.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       release-0-1-docusaurus:
         applies-to: version-updates
