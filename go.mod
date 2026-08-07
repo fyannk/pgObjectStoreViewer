@@ -12,14 +12,14 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.43.3
 	github.com/aws/aws-sdk-go-v2/config v1.32.34
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.33
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.106.3
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.106.4
 	github.com/aws/aws-sdk-go-v2/service/sts v1.45.3
 	github.com/aws/smithy-go v1.27.6
 	github.com/fyannk/pgObjectStoreViewer/api v0.0.0
 	github.com/golang/snappy v1.0.0
 	github.com/klauspost/compress v1.19.1
 	github.com/pierrec/lz4/v4 v4.1.27
-	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
+	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	github.com/ulikunitz/xz v0.5.16
 	google.golang.org/api v0.291.0
 )
