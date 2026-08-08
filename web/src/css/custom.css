@@ -1,29 +1,263 @@
 /**
- * ObjectStoreViewer docs theme overrides.
+ * ObjectStoreViewer docs theme.
+ *
+ * The palette is taken from the pgOSV lockup itself rather than invented:
+ * the wordmark supplies its two halves exactly — #004094 for "pg" and
+ * #279bf9 for "OSV" — and the mark's darkest structural blue gives the navy
+ * used for chrome. Sibling project pgConsole is built the same way, so the
+ * two sites read as one family without sharing a single colour.
  */
 
 :root {
-  --ifm-color-primary: #0f766e;
-  --ifm-color-primary-dark: #0d6960;
-  --ifm-color-primary-darker: #0c635a;
-  --ifm-color-primary-darkest: #0a514a;
-  --ifm-color-primary-light: #11837c;
-  --ifm-color-primary-lighter: #128984;
-  --ifm-color-primary-lightest: #159b95;
+  /* Link/primary ramp around the wordmark's deep blue, lifted enough to
+     clear AA on white. */
+  --ifm-color-primary: #0a56b3;
+  --ifm-color-primary-dark: #094a9b;
+  --ifm-color-primary-darker: #08458f;
+  --ifm-color-primary-darkest: #073976;
+  --ifm-color-primary-light: #1668c9;
+  --ifm-color-primary-lighter: #2b78d5;
+  --ifm-color-primary-lightest: #5698e6;
   --ifm-code-font-size: 95%;
+
+  /* Brand constants, used by the navbar lockup in both themes. */
+  --osv-navy: #00306e;
+  --osv-navy-border: #002554;
+  --osv-logo-blue: #279bf9;
+  --osv-on-navy: #f5f9ff;
+  --osv-on-navy-muted: #a9c6e8;
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #2dd4bf;
-  --ifm-color-primary-dark: #14c9b2;
-  --ifm-color-primary-darker: #13bea8;
-  --ifm-color-primary-darkest: #0f9c8a;
-  --ifm-color-primary-light: #52dcca;
-  --ifm-color-primary-lighter: #65e0d0;
-  --ifm-color-primary-lightest: #9aebe1;
+  /* Same hue family, lifted for contrast on the dark surface. */
+  --ifm-color-primary: #6fb2f5;
+  --ifm-color-primary-dark: #4a9bf1;
+  --ifm-color-primary-darker: #3790ef;
+  --ifm-color-primary-darkest: #1370d2;
+  --ifm-color-primary-light: #94c6f8;
+  --ifm-color-primary-lighter: #a7d0fa;
+  --ifm-color-primary-lightest: #d0e6fd;
 }
 
 /* The status vocabulary appears in many tables; keep code spans legible. */
 table code {
   white-space: nowrap;
+}
+
+/* Navy chrome in both themes: the mark sits on its own colour while the page
+   body follows the reader's light or dark preference. */
+.navbar {
+  --ifm-navbar-background-color: var(--osv-navy);
+  --ifm-navbar-link-color: var(--osv-on-navy);
+  --ifm-navbar-link-hover-color: var(--osv-logo-blue);
+  --ifm-navbar-search-input-background-color: rgb(255 255 255 / 12%);
+  --ifm-navbar-search-input-color: var(--osv-on-navy);
+  --ifm-navbar-search-input-placeholder-color: var(--osv-on-navy-muted);
+  border-bottom: 1px solid var(--osv-navy-border);
+  color: var(--osv-on-navy);
+}
+
+.navbar__link--active,
+.navbar__link:hover {
+  color: var(--osv-logo-blue);
+}
+
+/* The wordmark. Docusaurus renders navbar.title as a bare text node, which
+   cannot carry the two-tone split, so the halves are drawn as pseudo-elements
+   and the real text is collapsed rather than removed — the logo image keeps a
+   genuine alt, so the brand link still has an accessible name where
+   pseudo-element content is excluded from it. */
+.navbar__brand .navbar__title {
+  font-size: 0;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.navbar__brand .navbar__title::before,
+.navbar__brand .navbar__title::after {
+  font-size: 1.3rem;
+}
+
+.navbar__brand .navbar__title::before {
+  color: var(--osv-on-navy);
+  content: 'pg';
+}
+
+.navbar__brand .navbar__title::after {
+  color: var(--osv-logo-blue);
+  content: 'OSV';
+}
+
+.navbar__logo {
+  height: 1.85rem;
+  margin-right: 0.55rem;
+}
+
+/* Dropdowns inherit the navy bar, so their own surface has to be reset or the
+   version menu renders as light text on a light panel. */
+.navbar .dropdown__menu {
+  background-color: var(--ifm-background-surface-color);
+}
+
+.navbar .dropdown__link {
+  color: var(--ifm-font-color-base);
+}
+
+.navbar .dropdown__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+.navbar__toggle,
+.navbar-sidebar__brand .navbar__title::before,
+.navbar-sidebar__brand .navbar__title::after {
+  color: var(--osv-on-navy);
+}
+
+.navbar-sidebar {
+  --ifm-navbar-background-color: var(--osv-navy);
+}
+
+/* GitHub link: icon-only, so it carries its mark as a mask and its accessible
+   name from aria-label rather than visible text. */
+.navbar-github {
+  align-items: center;
+  display: flex;
+  padding: 0.25rem 0.5rem;
+}
+
+.navbar-github::before {
+  background-color: var(--osv-on-navy);
+  content: '';
+  display: block;
+  height: 1.4rem;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  width: 1.4rem;
+}
+
+.navbar-github:hover::before {
+  background-color: var(--osv-logo-blue);
+}
+
+/* The search field sits on navy; its icon and text must follow. */
+.navbar .DocSearch-Button,
+.navbar .navbar__search-input {
+  color: var(--osv-on-navy);
+}
+
+/* Landing page. The hero repeats the lockup at scale: navy field, the mark,
+   and the two-tone wordmark. */
+.osv-hero {
+  background: linear-gradient(180deg, var(--osv-navy) 0%, #0a4a9e 100%);
+  color: var(--osv-on-navy);
+  padding: 4rem 1rem;
+}
+
+.osv-hero__inner {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 60rem;
+}
+
+.osv-hero__mark {
+  height: auto;
+  max-width: 220px;
+  width: 100%;
+}
+
+.osv-hero__copy {
+  flex: 1 1 22rem;
+}
+
+.osv-hero__title {
+  font-size: clamp(2.75rem, 7vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0 0 0.75rem;
+}
+
+.osv-hero__title span {
+  color: var(--osv-logo-blue);
+}
+
+.osv-hero__tagline {
+  color: var(--osv-on-navy-muted);
+  font-size: 1.25rem;
+  margin: 0 0 1.75rem;
+  max-width: 34ch;
+}
+
+.osv-hero__tagline code {
+  background: rgb(255 255 255 / 12%);
+  border: none;
+  color: var(--osv-on-navy);
+}
+
+.osv-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* The outline button sits on navy, where Infima's dark-on-light default would
+   render it nearly invisible. */
+.osv-hero__ghost.button--outline {
+  border-color: rgb(255 255 255 / 45%);
+  color: var(--osv-on-navy);
+}
+
+.osv-hero__ghost.button--outline:hover {
+  background: rgb(255 255 255 / 12%);
+  border-color: var(--osv-logo-blue);
+  color: var(--osv-on-navy);
+}
+
+.osv-main {
+  margin: 0 auto;
+  max-width: 60rem;
+  padding: 3.5rem 1rem 4.5rem;
+}
+
+.osv-lede {
+  font-size: 1.125rem;
+  margin: 0 0 2.75rem;
+}
+
+.osv-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+}
+
+.osv-card {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.osv-card h2 {
+  font-size: 1.125rem;
+  margin: 0 0 0.5rem;
+}
+
+.osv-card p {
+  color: var(--ifm-color-emphasis-800);
+  margin: 0;
+}
+
+/* The scope disclaimer states a limit; it is not a failure, so it uses the
+   neutral emphasis ramp rather than a status colour. */
+.osv-note {
+  background: var(--ifm-color-emphasis-100);
+  border-left: 4px solid var(--ifm-color-primary);
+  border-radius: 0.25rem;
+  margin-top: 2.75rem;
+  padding: 1.25rem 1.5rem;
 }
