@@ -13,6 +13,7 @@
   <a href="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/ci.yml"><img src="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/docs.yml"><img src="https://github.com/fyannk/pgObjectStoreViewer/actions/workflows/docs.yml/badge.svg" alt="Documentation status"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/fyannk/pgObjectStoreViewer"><img src="https://api.scorecard.dev/projects/github.com/fyannk/pgObjectStoreViewer/badge" alt="OpenSSF Scorecard"></a>
+  <a href="https://www.bestpractices.dev/projects/13921"><img src="https://www.bestpractices.dev/projects/13921/badge" alt="OpenSSF Best Practices"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache-2.0 license"></a>
   <img src="https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white" alt="Go 1.26">
 </p>
