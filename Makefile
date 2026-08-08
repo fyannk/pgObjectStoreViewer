@@ -1,4 +1,5 @@
 GO ?= go
+PYTHON ?= python3
 IMAGE ?= objectstoreviewer:dev
 GOVULNCHECK_VERSION ?= v1.6.0
 GOLANGCI_LINT_VERSION ?= v2.12.2
@@ -8,7 +9,7 @@ DIST_DIR ?= dist
 ARTIFACT_DIR ?= artifacts
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
-.PHONY: build test test-api test-fuzz test-race test-stress test-integration test-barman-fixtures test-s3 test-azure test-gcs test-provider-parity test-scale test-container test-multiarch lint golangci-lint check-api vuln check docs package docker-build supply-chain release-check generate-evidence-artifacts
+.PHONY: build test test-api test-fuzz test-race test-stress test-integration test-barman-fixtures test-s3 test-azure test-gcs test-provider-parity test-scale test-container test-multiarch lint golangci-lint check-api vuln check docs package docker-build supply-chain release-check generate-evidence-artifacts generate-brand-assets
 
 build:
 	mkdir -p bin
@@ -125,3 +126,9 @@ release-check: check docs test-integration test-scale test-container package tes
 
 generate-evidence-artifacts:
 	$(GO) -C api run ./cmd/evidence-artifacts
+
+# Rebuild every published brand asset from hack/brand/lockup.png. Output is
+# deterministic, so a clean tree after running this is the check that the
+# committed assets still match their source.
+generate-brand-assets:
+	$(PYTHON) hack/generate-brand-assets.py

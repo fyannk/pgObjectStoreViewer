@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'ObjectStoreViewer',
   tagline: 'Structural evidence about PostgreSQL backup repositories — never a restore guarantee',
-  favicon: 'img/favicon.svg',
+  favicon: 'img/favicon.ico',
 
   // GitHub Pages for fyannk/pgObjectStoreViewer.
   url: 'https://fyannk.github.io',
@@ -30,6 +30,19 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  // Docusaurus emits the favicon link but nothing for iOS home screens, so the
+  // touch icon has to be declared here or the 180x180 asset is never requested.
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/pgObjectStoreViewer/img/apple-touch-icon.png',
+      },
+    },
+  ],
 
   presets: [
     [
@@ -81,8 +94,30 @@ const config: Config = {
     ],
   ],
   themeConfig: {
+    // The card unfurled by chat clients and social previews: the mark and the
+    // pgOSV lockup on the brand navy, so a link to the docs is recognisable
+    // before the page loads.
+    image: 'img/social-card.png',
+    metadata: [
+      {
+        name: 'description',
+        content:
+          'ObjectStoreViewer turns PostgreSQL backup repositories in S3, Azure Blob Storage, and GCS into a bounded, read-only inventory: backups, WAL continuity, timelines, and observed recovery coverage.',
+      },
+    ],
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
     navbar: {
       title: 'ObjectStoreViewer',
+      logo: {
+        alt: 'ObjectStoreViewer',
+        src: 'img/logo.png',
+        // The navbar is navy in both themes, so one file serves both. Without
+        // srcDark, Docusaurus renders a light-theme-only image and the mark
+        // vanishes in dark mode.
+        srcDark: 'img/logo.png',
+      },
       items: [
         {
           type: 'docSidebar',
@@ -94,11 +129,42 @@ const config: Config = {
           type: 'docsVersionDropdown',
           position: 'right',
         },
+        {
+          href: 'https://github.com/fyannk/pgObjectStoreViewer',
+          position: 'right',
+          className: 'navbar-github',
+          'aria-label': 'ObjectStoreViewer on GitHub',
+        },
       ],
     },
     footer: {
       style: 'dark',
+      logo: {
+        alt: 'ObjectStoreViewer',
+        src: 'img/logo.png',
+        srcDark: 'img/logo.png',
+        href: 'https://github.com/fyannk/pgObjectStoreViewer',
+        width: 84,
+      },
+      copyright: `Copyright © ${new Date().getFullYear()} ObjectStoreViewer contributors. Apache-2.0 licensed.`,
       links: [
+        {
+          title: 'Project',
+          items: [
+            {
+              label: 'GitHub',
+              href: 'https://github.com/fyannk/pgObjectStoreViewer',
+            },
+            {
+              label: 'Releases',
+              href: 'https://github.com/fyannk/pgObjectStoreViewer/releases',
+            },
+            {
+              label: 'Report a vulnerability',
+              href: 'https://github.com/fyannk/pgObjectStoreViewer/security/policy',
+            },
+          ],
+        },
         {
           title: 'Backup tooling',
           items: [

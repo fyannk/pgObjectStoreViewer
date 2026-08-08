@@ -69,6 +69,20 @@ make check-api         # fails on committed drift
 
 Commit regenerated files with the change that caused them.
 
+If you touched the brand — the logo, the favicon, the touch icon, or the social
+card's tagline:
+
+```bash
+make generate-brand-assets   # rebuild every asset from hack/brand/lockup.png
+```
+
+`hack/brand/lockup.png` is the single source: the mark and the pgOSV wordmark in
+one image, split at the transparent gutter between them. Never hand-edit a file
+under `web/static/img/` — change the lockup or the generator and re-run. Output
+is deterministic, so a clean `git status` after running the target is the check
+that the committed assets still match their source. The social card's copy lives
+in `TAGLINE` and `RULE` at the top of the script.
+
 ## Definition of done
 
 A change is done when all of the applicable items hold. This is the checklist

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="web/static/img/favicon.svg" width="88" alt="ObjectStoreViewer logo">
+  <img src="web/static/img/logo.png" width="150" alt="ObjectStoreViewer logo">
 </p>
 
 <h1 align="center">ObjectStoreViewer</h1>
