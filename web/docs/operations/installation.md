@@ -57,7 +57,7 @@ provides the immutable digest, Linux binaries, checksums, SPDX SBOM, license
 inventory, and vulnerability report. `make docker-build` remains available for
 local source builds as `objectstoreviewer:dev`.
 
-The image is a statically linked Go 1.26.5 binary on
+The image is a statically linked Go 1.26.6 binary on
 `gcr.io/distroless/static-debian13:nonroot`, running as UID/GID 65532, with no
 shell. It runs with a read-only root filesystem provided `/tmp` is writable.
 `make test-container` checks exactly that profile — plus an arbitrary UID/GID

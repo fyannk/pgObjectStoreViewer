@@ -31,7 +31,7 @@ sources of truth is one too many.
 
 ## Toolchain
 
-- Go 1.26+ (both modules pin toolchain 1.26.5)
+- Go 1.26+ (both modules pin toolchain 1.26.6)
 - `make`, `git`, `ripgrep`
 - Docker for the container, fixture, and provider checks
 - Network access for pinned test images, the Go vulnerability database, and
