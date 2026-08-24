@@ -63,6 +63,15 @@ func (c Codec) Decode(prefix, value string) (string, error) {
 	if err != nil || len(raw) < 36 {
 		return "", errors.New("invalid cursor")
 	}
+	// The decoder accepts more than one spelling of the same bytes: it ignores
+	// carriage returns and newlines, and outside Strict mode it also ignores
+	// non-zero unused bits in the final character. Either way the signature
+	// still verifies, so a caller could hold several distinct strings for one
+	// cursor. Requiring the value to be exactly what Encode would produce
+	// rejects all of them without depending on which quirks the decoder has.
+	if base64.RawURLEncoding.EncodeToString(raw) != value {
+		return "", errors.New("invalid cursor")
+	}
 	body, sig := raw[:len(raw)-sha256.Size], raw[len(raw)-sha256.Size:]
 	mac := hmac.New(sha256.New, c.key)
 	_, _ = mac.Write(body)

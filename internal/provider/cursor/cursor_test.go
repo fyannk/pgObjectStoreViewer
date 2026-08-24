@@ -63,3 +63,38 @@ func TestCodecRejectsOversizedCursor(t *testing.T) {
 		t.Fatal("oversized encoded cursor was accepted")
 	}
 }
+
+func TestCodecRejectsNonCanonicalEncoding(t *testing.T) {
+	t.Parallel()
+	codec, err := New()
+	if err != nil {
+		t.Fatal(err)
+	}
+	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+	// A body length that is not a multiple of three leaves unused bits in the
+	// final base64 character, which is where a second spelling of one cursor
+	// would otherwise appear.
+	for _, token := range []string{"a", "ab", "abcd", "abcde"} {
+		value, err := codec.Encode("alpha/", token)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for i := range len(alphabet) {
+			variant := value[:len(value)-1] + string(alphabet[i])
+			if variant == value {
+				continue
+			}
+			if _, err := codec.Decode("alpha/", variant); err == nil {
+				t.Fatalf("token %q: cursor %q was accepted as well as %q", token, variant, value)
+			}
+		}
+		// The decoder also skips carriage returns and newlines, which would
+		// otherwise let the same cursor be spelled at any length.
+		for _, filler := range []string{"\r", "\n", "\r\n"} {
+			variant := value[:4] + filler + value[4:]
+			if _, err := codec.Decode("alpha/", variant); err == nil {
+				t.Fatalf("token %q: cursor carrying %q was accepted", token, filler)
+			}
+		}
+	}
+}
