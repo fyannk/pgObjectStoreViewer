@@ -42,7 +42,11 @@ jobs:
           # Track the branch's own toolchain: a maintenance branch is scanned
           # with the Go version it actually ships with.
           go-version-file: go.mod
-          cache: true
+          # This job runs with default-branch privileges but checks out
+          # matrix.branch, so a shared module cache would let a maintenance
+          # branch write entries that default-branch workflows later restore.
+          # A vulnerability scan does not need a warm cache.
+          cache: false
 
       - name: Scan for known vulnerabilities
         run: make vuln
