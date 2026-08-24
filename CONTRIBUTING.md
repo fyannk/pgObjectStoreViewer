@@ -25,7 +25,7 @@ policy is in [`AGENTS.md`](AGENTS.md#release-branches).
 
 ## Development environment
 
-- Go 1.26+ (both modules pin the toolchain to 1.26.5)
+- Go 1.26+ (both modules pin the toolchain to 1.26.6)
 - `make`, `git`, and `ripgrep` (`rg`, used by the read-only and boilerplate
   checks)
 - `docker` for the container, fixture, and provider tests
