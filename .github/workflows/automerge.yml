@@ -37,14 +37,21 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # An allowlist rather than "not major": if update-type is ever empty or
+      # carries a value this workflow has not seen, the gate closes instead of
+      # arming a merge nobody chose.
       - name: Arm auto-merge
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Explain why a major upgrade was left alone
-        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+      - name: Explain why the bump was left alone
+        if: >-
+          steps.metadata.outputs.update-type != 'version-update:semver-patch' &&
+          steps.metadata.outputs.update-type != 'version-update:semver-minor'
         run: |
-          echo "::notice::Major upgrade (${{ steps.metadata.outputs.dependency-names }}) left for manual review."
+          echo "::notice::${{ steps.metadata.outputs.dependency-names }} has update-type '${{ steps.metadata.outputs.update-type }}', which is outside the auto-merge allowlist. Left for manual review."
