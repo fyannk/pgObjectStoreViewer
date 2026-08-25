@@ -78,6 +78,7 @@ lint: golangci-lint
 	$(GO) vet ./...
 	./hack/check-boilerplate.sh
 	./hack/check-readonly.sh
+	./hack/check-go-version.sh
 	$(GO) test ./internal/store -run '^TestReaderSurface$$'
 
 # golangci-lint carries the enforced gosec pass. Both modules are linted with
