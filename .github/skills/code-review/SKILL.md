@@ -18,10 +18,13 @@ on its own.
 ## The canonical source
 
 [`AGENTS.md`](../../../AGENTS.md) is the complete and normative invariant
-list; [`CONTRIBUTING.md`](../../../CONTRIBUTING.md) summarises it. **Read
-the invariant in `AGENTS.md` before asserting a change violates it**, and
-quote the number. Where the two disagree, `AGENTS.md` wins and the
-summary is the defect.
+list, numbered 1–15. **Read the invariant in `AGENTS.md` before asserting
+a change violates it**, and quote its number — the headings below use
+`AGENTS.md` numbering so the two can be checked against each other.
+
+[`CONTRIBUTING.md`](../../../CONTRIBUTING.md) summarises the list, and
+the summary is not a substitute: where the two disagree, `AGENTS.md` wins
+and the summary is the defect. Report the drift when you find it.
 
 ## What to look for
 
@@ -44,8 +47,11 @@ merely widens a policy without adding a call is easy to wave through
 because nothing in `cmd/` or `internal/` looks different.
 
 `hack/check-readonly.sh` covers both: it fails on mutation-shaped
-identifiers **and** on forbidden actions in the IAM policy templates.
-Treat an edit that narrows that scan as a change to the boundary itself.
+identifiers under `cmd`, `internal`, and `api`, **and** on forbidden
+actions in the IAM policy templates. It skips `_test.go` files, so a
+mutation-shaped helper added to a test is not caught by the scan. Treat
+an edit that narrows the scan — a removed directory, a widened glob — as
+a change to the boundary itself.
 
 ### 2. Evidence never overstates itself
 
@@ -69,12 +75,18 @@ presented as a total when the source could only supply a floor.
 ### 3. No secret disclosure
 
 Credentials, mounted secret values, provider authorization headers, signed
-URLs, SAS parameters, and raw credential-bearing SDK errors never reach
-logs, responses, HTML, errors, tests, fixtures, or snapshots. **Redaction
-happens at the adapter boundary**, so a raw provider error wrapped with
-`%w` further up is the classic leak — a signed URL or SAS parameter often
-rides inside the SDK error string. A new fixture captured from a real
-provider response is worth reading closely.
+URLs, Azure SAS parameters, and raw credential-bearing SDK errors must not
+appear in **logs, traces, metrics, HTTP responses, HTML, links, tests,
+fixtures, or snapshots** — the full destination list from `AGENTS.md`, and
+worth reading as a list rather than as "output", because traces, metrics,
+and generated links are the three that get forgotten. A signed URL in a
+span attribute or a metric label is the same disclosure as one in a log
+line.
+
+**Redaction is mandatory at adapter boundaries**, so a raw provider error
+wrapped with `%w` further up is the classic leak — a signed URL or SAS
+parameter often rides inside the SDK error string. A new fixture captured
+from a real provider response is worth reading closely.
 
 ### 4. No raw backup content in the UI
 
@@ -96,7 +108,7 @@ Never map object keys onto filesystem paths — that is a path-traversal
 sink — and never let a key or cursor escape its configured store,
 destination prefix, and scope.
 
-### 7. Provider-neutral, format-isolated
+### 7 & 14. Provider-neutral, format-isolated
 
 AWS, Azure, and GCS SDK types stay inside `internal/provider/<name>`.
 Barman Cloud and pgBackRest keep their typed catalogs inside
@@ -117,7 +129,7 @@ The application authenticates nothing. `TRUSTED_USER_HEADER` is
 display-only — a change treating it as an authorization input is a
 security change, not a feature.
 
-### 10. Routes, health, and snapshots
+### 10-12. Downloads, health, and snapshots
 
 Downloads stay opt-in and are **not built yet**: no incidental raw-object
 route may appear before that feature ships with its own threat model.
@@ -126,17 +138,30 @@ recent lightweight prefix-scoped reachability result — neither runs a
 scan. A failed refresh never replaces good evidence: publish snapshots
 atomically, keep the last complete one, and mark it stale.
 
-### 11. Repository format is explicit
+### 13. Repository format is explicit
 
 No auto-detection, no fallback between formats. A heuristic that guesses
 the format is a finding however convenient.
 
-### 12. `#nosec` needs a named bound
+### 15. Format helpers are fixed and sandboxed
+
+If the Slice 6 gate accepts the official pgBackRest metadata helper, only
+the immutable read-only `info --output=json` operation may run: **no
+shell, no user-supplied flags, no mutation or restore commands, no
+unbounded I/O or runtime, no secret arguments, and no ambient write
+credentials.** This is the one place the project may execute an external
+binary, so a change that adds a flag, widens the argument set, or lets a
+value reach the command line is a security change. It is also the
+invariant `CONTRIBUTING.md` omits, so a reviewer working from the summary
+will not know it exists.
+
+## Enforced by tooling, not numbered invariants
 
 A guarded integer conversion carries `#nosec G115 -- <invariant>` naming
 the bound that makes it safe. A `#nosec` without a named, checkable
 invariant is silenced analysis, not verified analysis — flag it. License
-boilerplate (`hack/boilerplate.go.txt`) is required on every new Go file.
+boilerplate (`hack/boilerplate.go.txt`) is required on every new Go file,
+and `golangci-lint` with `gosec` must pass on both modules.
 
 ## Documentation is not specification
 

@@ -2,7 +2,7 @@
 set -eu
 
 forbidden='\b(Put|PutObject|Create|CreateBucket|Upload|Copy|CopyObject|Delete|DeleteObject|Batch|Multipart|Lifecycle|PutObjectTagging|CreateMultipartUpload)\b'
-if rg -n --glob '*.go' --glob '!**/*_test.go' "$forbidden" cmd internal; then
+if rg -n --glob '*.go' --glob '!**/*_test.go' "$forbidden" cmd internal api; then
   echo "forbidden mutation-shaped identifier found in application source" >&2
   exit 1
 fi
