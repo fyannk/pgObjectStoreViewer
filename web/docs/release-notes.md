@@ -12,11 +12,10 @@ changes from v0.1.0.
 
 ## v0.1.0 — 2026-07-30
 
-The first frozen maintenance release includes the currently shipped Barman
-Cloud inventory, backup and WAL evidence, provider parity, conservative
-recovery coverage, and the pgConsole evidence producer. Its functionality is
-frozen on `release-0.1`; maintenance there is limited to bug and security fixes,
-dependency updates, documentation corrections, and release infrastructure.
+The first release includes the currently shipped Barman Cloud inventory, backup
+and WAL evidence, provider parity, conservative recovery coverage, and the
+pgConsole evidence producer. The tag records exactly what shipped; later fixes
+arrive in later tags rather than as maintenance on this one.
 
 ## Milestone status
 

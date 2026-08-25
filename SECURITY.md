@@ -43,15 +43,14 @@ explain why.
 
 ## Supported versions
 
-| Version | Branch | Status |
-|---|---|---|
-| 0.1.x | `release-0.1` | Supported — security and bug fixes |
-| unreleased | `main` | Supported — fixes land here first, then get backported |
-| < 0.1.0 | — | Not supported |
+Security fixes are provided for the latest published release. ObjectStoreViewer
+is pre-1.0: only the most recent 0.x minor receives fixes, and there are no
+backports to earlier ones.
 
-Fixes land on `main` and are backported to the supported release branch as a
-complete, tested change. See
-[release branches](CONTRIBUTING.md#release-branches).
+Every release is a tag on `main`, so a fix ships by landing on `main` and
+cutting the next tag. There are no maintenance branches. If you are running an
+older 0.x, upgrading to the latest release is the supported path. See
+[releases](CONTRIBUTING.md#releases).
 
 ## Scope
 
