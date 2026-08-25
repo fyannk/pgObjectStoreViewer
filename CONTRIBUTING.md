@@ -106,8 +106,8 @@ is a bug:
 1. **Read-only by construction.** Domain code may use only list, bounded
    get/open, and stat/head through the narrow read-store interface. No write,
    copy, delete, multipart, lifecycle, tagging, or restore operation may exist
-   anywhere in `cmd/` or `internal/` — `hack/check-readonly.sh` fails the build
-   on mutation-shaped identifiers and on forbidden actions in the IAM policy
+   anywhere in `cmd/`, `internal/`, or `api/` — `hack/check-readonly.sh` fails the
+   build on mutation-shaped identifiers and on forbidden actions in the IAM policy
    templates.
 2. **Never overstate evidence.** `healthy`, `warning`, `unhealthy`, and
    `unknown` keep exactly the meanings the semantic tests assert. Any required

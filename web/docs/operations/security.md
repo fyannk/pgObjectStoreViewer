@@ -49,7 +49,7 @@ spec:
 | Layer | Guarantee |
 |---|---|
 | Interface | domain code sees only list, bounded get/open, and stat/head — there is no write method to call |
-| Build | `hack/check-readonly.sh` fails on mutation-shaped identifiers in `cmd/`/`internal/` and on forbidden actions in the shipped policy templates |
+| Build | `hack/check-readonly.sh` fails on mutation-shaped identifiers in `cmd/`, `internal/`, and `api/`, and on forbidden actions in the shipped policy templates |
 | Credential | the deployment credential must independently deny writes — the layer that survives a bug in the other two |
 
 Use the templates under

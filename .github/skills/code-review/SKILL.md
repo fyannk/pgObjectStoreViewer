@@ -151,9 +151,8 @@ shell, no user-supplied flags, no mutation or restore commands, no
 unbounded I/O or runtime, no secret arguments, and no ambient write
 credentials.** This is the one place the project may execute an external
 binary, so a change that adds a flag, widens the argument set, or lets a
-value reach the command line is a security change. It is also the
-invariant `CONTRIBUTING.md` omits, so a reviewer working from the summary
-will not know it exists.
+value reach the command line is a security change. `AGENTS.md` is where its
+exact wording lives; read it there before judging a helper change.
 
 ## Enforced by tooling, not numbered invariants
 
