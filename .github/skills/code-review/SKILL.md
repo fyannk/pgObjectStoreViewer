@@ -27,13 +27,25 @@ summary is the defect.
 
 ### 1. Read-only by construction
 
-Domain code may use only list, bounded get/open, and stat/head through the
-narrow read-store interface. No write, copy, delete, multipart, lifecycle,
-tagging, or restore operation may exist anywhere in `cmd/` or `internal/`.
-`hack/check-readonly.sh` fails on mutation-shaped identifiers **and on
-forbidden actions in the IAM policy templates** — so a change that widens
-a policy template is a boundary change even when no Go code moves. Treat
-an edit that narrows that scan as a change to the boundary itself.
+The invariant has two independent layers, and a review has to check both.
+
+**The code layer.** Domain code may use only list, bounded get/open, and
+stat/head through the narrow read-store interface. No write, create,
+upload, copy, delete, multipart, lifecycle, tagging-mutation,
+bucket-creation, or restore operation may exist anywhere in `cmd/`,
+`internal/`, or `api/`.
+
+**The credential layer.** *"Provider credentials must independently deny
+writes."* The word is **independently**: the deny must hold even if the
+code layer were wrong. So a change to an IAM policy template, a role, a
+trust relationship, or the documented least-privilege grant is a
+read-only boundary change even when no Go code moves — and one that
+merely widens a policy without adding a call is easy to wave through
+because nothing in `cmd/` or `internal/` looks different.
+
+`hack/check-readonly.sh` covers both: it fails on mutation-shaped
+identifiers **and** on forbidden actions in the IAM policy templates.
+Treat an edit that narrows that scan as a change to the boundary itself.
 
 ### 2. Evidence never overstates itself
 
