@@ -56,18 +56,19 @@ define output.
 The single-repository configuration contract was frozen on 2026-07-27. Change it
 only with matching compatibility, documentation, and test updates.
 
-## Release branches
+## Releases
 
-Branches named `release-X.Y` freeze the user-visible feature set at `vX.Y.0`.
-They accept only bug and security fixes, dependency or toolchain updates,
-documentation corrections for the frozen behavior, and CI or release
-maintenance. Do not add configuration, providers, repository formats, API
-capabilities, routes, or other functionality on a release branch.
+`main` is the only long-lived branch. A release is a `vX.Y.Z` tag on `main`;
+the release workflow builds every artifact from the tag, so the tag alone
+records what shipped.
 
-Land a generally applicable fix on `main` first and backport it with its tests
-and documentation. A release-only fix needs an explicit compatibility reason.
-Every backport must preserve the release's configuration and evidence contracts
-and pass the same applicable checks as `main`.
+Do not create `release-X.Y` branches and do not backport. Every fix, including
+a security fix, lands on `main` and reaches users in the next tag. This keeps
+one line of history to test, scan, and reason about: what CI proves about
+`main` is what the next release ships.
+
+Older tags remain readable and buildable but receive no further fixes. When a
+released version needs a fix, the answer is a new tag, not a branch.
 
 ## Hard rules — violating any of these is a bug
 

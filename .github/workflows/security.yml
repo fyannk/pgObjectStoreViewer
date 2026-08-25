@@ -2,9 +2,16 @@ name: Scheduled security scan
 
 # CI only runs govulncheck when something is pushed. A vulnerability disclosed
 # against a dependency of an already-released version would therefore stay
-# invisible until the next change landed. This workflow re-scans every
-# supported branch on a schedule, so a new advisory surfaces against the code
-# that is actually deployed rather than against the next commit.
+# invisible until the next change landed. This workflow re-scans main on a
+# schedule, so a new advisory surfaces on the day it is published rather than
+# whenever the next commit happens to land.
+#
+# It scans the tip of main, which is usually ahead of the latest v* tag, so it
+# reports what the next release will ship and not a re-audit of the last one.
+# That is the useful reading here: fixes are never backported, so the remedy
+# for any advisory is the next tag, and the tip is where that tag is cut from.
+# An already-released artifact is not rescanned; upgrading forward is the
+# documented path in SECURITY.md.
 #
 # Dependabot covers the module graph; govulncheck covers reachability. They
 # disagree often enough to be worth running both.
@@ -23,29 +30,21 @@ concurrency:
 
 jobs:
   vuln:
-    name: govulncheck (${{ matrix.branch }})
+    name: govulncheck
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        # Every branch listed as supported in SECURITY.md.
-        branch: [main, release-0.1]
     steps:
+      # No ref: the scan runs against the default branch it is scheduled from.
+      # Checking out any other ref here would run that ref's code with
+      # default-branch privileges, which is the cache-poisoning shape code
+      # scanning flags.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ matrix.branch }}
           persist-credentials: false
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          # Track the branch's own toolchain: a maintenance branch is scanned
-          # with the Go version it actually ships with.
           go-version-file: go.mod
-          # This job runs with default-branch privileges but checks out
-          # matrix.branch, so a shared module cache would let a maintenance
-          # branch write entries that default-branch workflows later restore.
-          # A vulnerability scan does not need a warm cache.
           cache: false
 
       - name: Scan for known vulnerabilities

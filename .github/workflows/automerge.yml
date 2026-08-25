@@ -24,6 +24,9 @@ jobs:
     name: Arm auto-merge for routine bumps
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # main is the only long-lived branch, so the base check is redundant today.
+    # It stays so that a branch introduced later does not silently inherit
+    # unattended merges.
     if: >-
       github.event.pull_request.user.login == 'dependabot[bot]' &&
       github.event.pull_request.base.ref == 'main'

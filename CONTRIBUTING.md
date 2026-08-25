@@ -15,13 +15,16 @@ readers. Where they disagree, the code is right and the page is a bug. Do not ad
 a `docs/` tree — contributor rules go in [`AGENTS.md`](AGENTS.md), reader-facing
 explanation goes in `web/`.
 
-## Release branches
+## Releases
 
-`release-X.Y` branches are maintenance-only after `vX.Y.0`: bug and security
-fixes, dependency or toolchain updates, documentation corrections, and release
-maintenance are welcome; new functionality belongs on `main`. Prefer landing a
-fix on `main` first and backporting the complete tested change. The normative
-policy is in [`AGENTS.md`](AGENTS.md#release-branches).
+`main` is the only long-lived branch. A release is a `vX.Y.Z` tag on `main`,
+and the release workflow builds every artifact from that tag, so the tag is the
+complete record of what shipped.
+
+There are no maintenance branches and no backports: a fix reaches users by
+landing on `main` and appearing in the next tag. Older tags stay readable and
+buildable, but they do not receive further fixes. The normative policy is in
+[`AGENTS.md`](AGENTS.md#releases).
 
 ## Development environment
 
