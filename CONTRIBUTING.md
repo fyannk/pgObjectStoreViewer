@@ -97,6 +97,50 @@ A change that alters behavior updates, in the same commit: the code, the tests,
 the affected check target, and the documentation (`web/docs/` and the root
 `README.md`).
 
+
+## Merging and version pins
+
+The ruleset on `main` requires every job `ci.yml` runs on a pull request —
+`release-artifacts` carries `if: github.event_name == 'push'` and is not among
+them — plus the `CodeQL` code-scanning result, and requires review threads to be
+resolved. It requires no approvals: the gate is the pipeline and the reading.
+The per-language `Analyze (...)` jobs are deliberately not required — CodeQL
+default setup chooses its own language list and GitHub can change it, and a
+required check that stops reporting would hang every pull request.
+
+Dependabot's `semver-patch` and `semver-minor` bumps queue themselves through
+[`automerge.yml`](.github/workflows/automerge.yml). It merges on an allowlist
+rather than on "not a major", so an update type the workflow has not seen closes
+the gate instead of arming a merge nobody chose.
+
+That workflow merges with `AUTOMERGE_TOKEN`, which **must be registered as a
+Dependabot secret, not an Actions one** — it runs on `pull_request`, and a
+Dependabot-triggered run sees only Dependabot secrets. A push made with the
+workflow's own `GITHUB_TOKEN` starts no workflow run, so a bump merged that way
+lands on `main` with `ci.yml` never running against the merged result.
+`tool-pins.yml` needs the same token as an ordinary **Actions** secret, because
+it runs on a schedule rather than from Dependabot. If either is missing the
+workflow fails loudly and the bump waits for a person.
+
+The Go version lives in the module files. CI reads it with setup-go's
+`go-version-file`, and [`hack/check-go-version.sh`](hack/check-go-version.sh)
+requires `go.mod`, `api/go.mod`, and the `Dockerfile` builder image to agree —
+three spellings of one version, and nothing else compares them. The language
+floor is held at 1.26.6, above the 1.26.0 the module graph derives, because
+1.26.0 through 1.26.5 carry standard-library vulnerabilities that a
+`GOTOOLCHAIN=local` build would compile against; the reason sits beside the
+directive in both module files.
+
+The linter version lives in the `Makefile`, which is what a contributor runs
+locally, and CI reads it from there rather than carrying its own copy. Both it
+and `GOVULNCHECK_VERSION` are invisible to Dependabot, which reads manifests and
+not `Makefile` variables. [`hack/check-tool-pins.sh`](hack/check-tool-pins.sh)
+compares them against the module proxy and
+[`tool-pins.yml`](.github/workflows/tool-pins.yml) runs it weekly and opens a
+pull request when one is behind. That script is deliberately not in `make
+check`: it needs the network, and it would turn CI red the day upstream tags a
+release.
+
 ## Repository invariants
 
 These come from [`AGENTS.md`](AGENTS.md), which is the complete and normative
