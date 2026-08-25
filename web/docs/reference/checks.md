@@ -19,7 +19,7 @@ maintain separate slice, milestone, or acceptance-ID taxonomies.
 | `make test-stress` | repeated publication, channel, runtime, and probe lifecycle tests under the race detector |
 | `make check-api` | the API module's zero-dependency boundary and generated-artifact drift check |
 | `make lint` | gofmt, vet, license boilerplate, read-only source/policy scan, read-store surface check, golangci-lint, and gosec |
-| `make vuln` | pinned `govulncheck` v1.6.0 |
+| `make vuln` | `govulncheck`, pinned by `GOVULNCHECK_VERSION` in the `Makefile` |
 | `make check` | every non-Docker check above |
 | `make docs` | documentation type checking, broken-link checking, and production build |
 

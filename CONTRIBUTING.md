@@ -60,7 +60,7 @@ make test-container       # restricted standalone and sidecar profiles
 make lint                 # gofmt, vet, boilerplate, read-only scan, reader
                           # surface, and golangci-lint with gosec enforced
 make golangci-lint        # golangci-lint alone, both modules
-make vuln                 # pinned govulncheck v1.6.0 (needs network)
+make vuln                 # govulncheck at the Makefile pin (needs network)
 make check                # complete local verification without Docker
 make package              # amd64/arm64 binaries plus SHA256SUMS
 make docker-build         # build the distroless image
