@@ -9,6 +9,12 @@
 # upstream tags a release, which has nothing to do with the change under
 # test. It runs on a schedule instead, and opens a pull request.
 #
+# It rewrites the Makefile and nothing else, so no prose may restate one of
+# these versions: a document naming a version goes stale the first time this
+# runs, and the bump would carry a lie in the same commit. Name the Makefile
+# variable instead — this comment does not spell a version out either, for
+# exactly the reason it is describing.
+#
 #   ./hack/check-tool-pins.sh          report drift, exit 1 if any
 #   ./hack/check-tool-pins.sh --bump   rewrite the Makefile to the latest
 set -eu
