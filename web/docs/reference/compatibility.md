@@ -28,7 +28,7 @@ licensing intact.
 | PostgreSQL WAL grammar | 18 (`src/include/access/xlog_internal.h`): 24-hex-digit names, 1 MiB – 1 GiB power-of-two segments, `2^32 / wal_segment_size` segments per log ID, `.partial`, timeline `.history`, backup-history names |
 | Barman WAL grammar and hash directory | 3.19.1 (`barman/xlog.py`) |
 | Barman compression suffixes | 3.19.1 (`barman/compression.py`): `.gz`, `.bz2`, `.xz`, `.snappy`, `.zst`, `.lz4` |
-| Go toolchain | 1.26.6 |
+| Go toolchain | 1.27.0 |
 | Object stores | S3/MinIO, Azure/Azurite, GCS/fake-gcs-server — all pinned by digest |
 | Architectures | `linux/amd64`, `linux/arm64` |
 | Restricted runtime | distroless non-root; arbitrary UID/GID, read-only root, dropped capabilities, no-new-privileges |
