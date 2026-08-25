@@ -144,13 +144,14 @@ release.
 ## Repository invariants
 
 These come from [`AGENTS.md`](AGENTS.md), which is the complete and normative
-list. A change that violates one is a bug:
+list, and the numbering here matches it one for one. A change that violates one
+is a bug:
 
 1. **Read-only by construction.** Domain code may use only list, bounded
    get/open, and stat/head through the narrow read-store interface. No write,
    copy, delete, multipart, lifecycle, tagging, or restore operation may exist
-   anywhere in `cmd/` or `internal/` — `hack/check-readonly.sh` fails the build
-   on mutation-shaped identifiers and on forbidden actions in the IAM policy
+   anywhere in `cmd/`, `internal/`, or `api/` — `hack/check-readonly.sh` fails the
+   build on mutation-shaped identifiers and on forbidden actions in the IAM policy
    templates.
 2. **Never overstate evidence.** `healthy`, `warning`, `unhealthy`, and
    `unknown` keep exactly the meanings the semantic tests assert. Any required
@@ -189,12 +190,20 @@ list. A change that violates one is a bug:
     formats.
 14. **No generic backup model that erases invariants.** A pgBackRest reference
     chain is not a Barman parent field.
-15. **License boilerplate** (`hack/boilerplate.go.txt`) on every new Go file.
+15. **Format helpers are fixed and sandboxed.** If the Slice 6 gate accepts
+    the official pgBackRest metadata helper, only the immutable read-only
+    `info --output=json` operation may run: no shell, user flags, mutation or
+    restore commands, unbounded I/O/runtime, secret arguments, or ambient
+    write credentials.
 
-16. **Enforced static analysis.** `golangci-lint` with `gosec` must pass on both
-    modules. A guarded integer conversion carries a `#nosec G115 -- <invariant>`
-    comment naming the bound that makes it safe; do not silence a finding you
-    have not actually verified.
+Two more rules are enforced by tooling rather than numbered above, so quoting
+them by number would collide with `AGENTS.md`:
+
+- **License boilerplate** (`hack/boilerplate.go.txt`) on every new Go file.
+- **Enforced static analysis.** `golangci-lint` with `gosec` must pass on both
+  modules. A guarded integer conversion carries a `#nosec G115 -- <invariant>`
+  comment naming the bound that makes it safe; do not silence a finding you
+  have not actually verified.
 
 The single-repository configuration contract was frozen on 2026-07-27. Changing
 it requires matching compatibility, documentation, and test updates.

@@ -20,7 +20,7 @@ There is no write, create, upload, copy, delete, multipart, lifecycle,
 tagging-mutation, bucket-creation, or restore operation anywhere — not
 unexported, not behind a flag.
 `hack/check-readonly.sh` fails the build if a mutation-shaped identifier appears
-in `cmd/` or `internal/`, and `make lint` runs a dedicated
+in `cmd/`, `internal/`, or `api/`, and `make lint` runs a dedicated
 `TestReaderSurface` guard over the interface itself.
 
 ## Supported providers

@@ -28,7 +28,7 @@ Three independent layers keep the viewer harmless:
 1. **The interface.** Domain code sees only list, bounded get/open, and
    stat/head. There is no write method to call.
 2. **The build.** `hack/check-readonly.sh` fails on mutation-shaped
-   identifiers in `cmd/` and `internal/`, and on forbidden actions in the
+   identifiers in `cmd/`, `internal/`, and `api/`, and on forbidden actions in the
    shipped IAM policy templates.
 3. **The credential.** The deployment credential must independently deny
    writes. This is the layer that survives a bug in the other two.
