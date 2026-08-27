@@ -67,12 +67,12 @@ const config: Config = {
             '0.1.1': {
               label: 'v0.1.1',
               badge: true,
-              banner: 'none',
+              banner: 'unmaintained',
             },
             '0.1.0': {
               label: 'v0.1.0',
               badge: true,
-              banner: 'none',
+              banner: 'unmaintained',
             },
           },
         },

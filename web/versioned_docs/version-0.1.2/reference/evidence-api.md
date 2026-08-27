@@ -7,7 +7,7 @@ sidebar_position: 3
 The private producer API served in `pgconsole-sidecar` mode over
 `/var/run/objectstoreviewer/evidence.sock`. The authoritative definition is the
 generated schema, Go types, and wire goldens in the
-[`api` module](https://github.com/fyannk/pgObjectStoreViewer/tree/main/api), all
+[`api` module](https://github.com/fyannk/pgObjectStoreViewer/tree/v0.1.2/api), all
 checked by `make check`.
 
 ## Routes

@@ -5,9 +5,9 @@ sidebar_position: 6
 # Development
 
 Contribution rules live in
-[`CONTRIBUTING.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/CONTRIBUTING.md),
+[`CONTRIBUTING.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/v0.1.2/CONTRIBUTING.md),
 and the complete normative rules for human and automated contributors are in
-[`AGENTS.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/AGENTS.md).
+[`AGENTS.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/v0.1.2/AGENTS.md).
 This page is the short version, plus how this site relates to the code.
 
 ## Code is the truth

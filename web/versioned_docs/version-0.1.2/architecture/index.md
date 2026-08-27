@@ -53,7 +53,7 @@ flowchart TB
 | Composition | `internal/application`, `cmd/objectstoreviewer` | wire a runtime; the binary also carries the `probe` subcommand |
 
 The cross-project wire vocabulary lives in a **separate Go module**,
-[`api/`](https://github.com/fyannk/pgObjectStoreViewer/tree/main/api), which is
+[`api/`](https://github.com/fyannk/pgObjectStoreViewer/tree/v0.1.2/api), which is
 required to have zero external module dependencies so that pgConsole and
 pgtoolbox can depend on it without inheriting a cloud SDK.
 

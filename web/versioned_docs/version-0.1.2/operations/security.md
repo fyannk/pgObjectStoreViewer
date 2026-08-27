@@ -53,7 +53,7 @@ spec:
 | Credential | the deployment credential must independently deny writes — the layer that survives a bug in the other two |
 
 Use the templates under
-[`deploy/policies`](https://github.com/fyannk/pgObjectStoreViewer/tree/main/deploy/policies)
+[`deploy/policies`](https://github.com/fyannk/pgObjectStoreViewer/tree/v0.1.2/deploy/policies)
 and scope them to the exact destination prefix. See the [policy
 reference](../reference/policies.md).
 
@@ -126,7 +126,7 @@ Advisories](https://github.com/fyannk/pgObjectStoreViewer/security/advisories/ne
 with the redacted evidence described in
 [troubleshooting](troubleshooting.md#collecting-evidence-for-a-bug-report).
 
-[`SECURITY.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/SECURITY.md)
+[`SECURITY.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/v0.1.2/SECURITY.md)
 records the supported versions, the response targets, and which findings are in
 scope — in particular that the absence of authentication, authorization, and
 TLS in the application is documented design, not a vulnerability.
