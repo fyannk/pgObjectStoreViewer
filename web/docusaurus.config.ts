@@ -52,22 +52,27 @@ const config: Config = {
           path: 'docs',
           sidebarPath: './sidebars.ts',
           includeCurrentVersion: true,
-          lastVersion: '0.1.1',
+          lastVersion: '0.1.2',
           versions: {
             current: {
               label: 'Dev',
               badge: true,
               banner: 'unreleased',
             },
+            '0.1.2': {
+              label: 'v0.1.2',
+              badge: true,
+              banner: 'none',
+            },
             '0.1.1': {
               label: 'v0.1.1',
               badge: true,
-              banner: 'none',
+              banner: 'unmaintained',
             },
             '0.1.0': {
               label: 'v0.1.0',
               badge: true,
-              banner: 'none',
+              banner: 'unmaintained',
             },
           },
         },

@@ -35,7 +35,7 @@ body:
       description: >-
         The version from the startup log or the UI, the container image tag, or
         `dist/VERSION`. If you built from source, give the commit SHA.
-      placeholder: v0.1.1 / ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1 / commit abc1234
+      placeholder: v0.1.2 / ghcr.io/fyannk/pgobjectstoreviewer:v0.1.2 / commit abc1234
     validations:
       required: true
 

@@ -103,7 +103,7 @@ Versioned, multi-architecture images are published to GitHub Container
 Registry with SBOM and provenance attestations:
 
 ```bash
-docker pull ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1
+docker pull ghcr.io/fyannk/pgobjectstoreviewer:v0.1.2
 ```
 
 The [latest release](https://github.com/fyannk/pgObjectStoreViewer/releases/latest)

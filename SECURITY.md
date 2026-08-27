@@ -111,7 +111,7 @@ vulnerability report, and the immutable image digest. Container images and
 release binaries carry provenance attestations:
 
 ```bash
-gh attestation verify oci://ghcr.io/fyannk/pgobjectstoreviewer:v0.1.1 \
+gh attestation verify oci://ghcr.io/fyannk/pgobjectstoreviewer:v0.1.2 \
   -R fyannk/pgObjectStoreViewer
 ```
 
