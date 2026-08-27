@@ -13,7 +13,7 @@ faith.
 ```bash
 docker run --rm --detach --name osv-azurite \
   --publish 10000:10000 \
-  mcr.microsoft.com/azure-storage/azurite \
+  mcr.microsoft.com/azure-storage/azurite@sha256:647c63a91102a9d8e8000aab803436e1fc85fbb285e7ce830a82ee5d6661cf37 \
   azurite-blob --blobHost 0.0.0.0
 ```
 
@@ -128,6 +128,6 @@ make test-gcs     # pinned fake-gcs-server
 ## Cleanup
 
 ```bash
-docker rm -f osv-azurite osv-fake-gcs
+docker rm -f osv-azurite
 rm -rf /tmp/osv-credentials
 ```

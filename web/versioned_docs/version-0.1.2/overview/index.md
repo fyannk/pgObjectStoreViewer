@@ -15,7 +15,7 @@ the browser.
 :::danger The one rule
 ObjectStoreViewer reports **structural evidence**. It does not prove that a
 restore will succeed. Absence of a detected problem is not proof of
-restoreability.
+restorability.
 :::
 
 That constraint is not modesty, it is the product. The application never reads
