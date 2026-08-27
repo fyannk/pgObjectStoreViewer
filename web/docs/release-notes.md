@@ -33,7 +33,7 @@ the only non-test source file that differs from v0.1.1.
 **Maintenance branches are gone.** Releases are tags on `main` and there are no
 backports. Fixes reach a deployment by upgrading to the next tag, which is why
 this release exists rather than a patch to the 0.1 line. See
-[`SECURITY.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/main/SECURITY.md).
+[`SECURITY.md`](https://github.com/fyannk/pgObjectStoreViewer/blob/v0.1.2/SECURITY.md).
 
 ## v0.1.1 — 2026-07-30
 
