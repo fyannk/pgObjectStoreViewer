@@ -25,7 +25,7 @@ docker run --rm --detach --name osv-minio \
   --publish 9000:9000 \
   --env MINIO_ROOT_USER=local-access \
   --env MINIO_ROOT_PASSWORD=local-secret-value \
-  minio/minio server /data
+  quay.io/minio/minio server /data
 ```
 
 Create a bucket and a read-only user. Using `mc` from a container:
@@ -33,7 +33,7 @@ Create a bucket and a read-only user. Using `mc` from a container:
 ```bash
 export MC_HOST_local=http://local-access:local-secret-value@127.0.0.1:9000
 docker run --rm --network host --env MC_HOST_local \
-  minio/mc mb local/backups
+  quay.io/minio/mc mb local/backups
 ```
 
 ## 3. Put a Barman repository in it
