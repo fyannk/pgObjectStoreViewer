@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 
-minio_image='minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e'
-mc_image='minio/mc@sha256:fb8f773eac8ef9d6da0486d5dec2f42f219358bcb8de579d1623d518c9ebd4cc'
+minio_image='quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e'
+mc_image='quay.io/minio/mc@sha256:fb8f773eac8ef9d6da0486d5dec2f42f219358bcb8de579d1623d518c9ebd4cc'
 container="objectstoreviewer-test-minio-$$"
 root_access='test-root-access'
 root_secret='test-root-secret-canary'
