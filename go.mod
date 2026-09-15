@@ -8,7 +8,7 @@ module github.com/fyannk/pgObjectStoreViewer
 // CI builds at the pinned toolchain and never at the floor.
 go 1.26.6
 
-toolchain go1.27.0
+toolchain go1.27.1
 
 require (
 	cloud.google.com/go/storage v1.67.0
