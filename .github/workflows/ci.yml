@@ -168,3 +168,4 @@ jobs:
           path: |
             dist/
             artifacts/release/
+          retention-days: 14
