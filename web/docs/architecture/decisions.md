@@ -157,3 +157,26 @@ threat model, and no incidental raw-object endpoint may appear earlier.
 and pinned generated repositories are the compatibility *authority*, and the
 behavior is reimplemented in Go. Implementation code is not copied, which keeps
 this project's Apache-2.0 licensing intact.
+
+## A frozen emulator image over a maintained one
+
+**Decided 2026-09-28, after MinIO's second registry removal.** The S3 side of the
+provider-parity journey pins `bitnamilegacy/minio` — an archive its publisher
+states is no longer updated — rather than an image someone still maintains.
+
+MinIO removed `minio/minio` and `minio/mc` from Docker Hub on 2026-09-11, the
+journey was repointed at quay.io, and on 2026-09-24 those repositories stopped
+answering anonymous pulls too. Both times CI went red on `main` with nothing in
+this repository having changed. A maintained image is only better while its
+publisher keeps choosing to publish it; an archive nobody intends to touch again
+cannot be re-licensed, re-tagged, or moved behind a login.
+
+This is defensible only because of what the image is: a test fixture on a
+loopback port for the length of one journey, pinned by digest, that no shipped
+artifact links, imports, or ships. It is not a dependency of the binary, and the
+usual "must be actively maintained" rule for dependencies does not reach it. A
+vulnerability in it is not reachable by anything a user runs.
+
+What it rules out: treating the emulator as a stand-in for S3 itself. The
+journey proves the adapter's behavior against *an* S3 implementation, and the
+parity test proves the three adapters agree. Neither is cloud coverage.
