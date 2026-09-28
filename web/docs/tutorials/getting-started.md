@@ -23,17 +23,28 @@ viewer itself.
 ```bash
 docker run --rm --detach --name osv-minio \
   --publish 9000:9000 \
+  --user 0 --entrypoint minio \
   --env MINIO_ROOT_USER=local-access \
   --env MINIO_ROOT_PASSWORD=local-secret-value \
-  quay.io/minio/minio server /data
+  bitnamilegacy/minio server /data
 ```
 
-Create a bucket and a read-only user. Using `mc` from a container:
+:::note Why the Bitnami archive
+MinIO removed `minio/minio` and `minio/mc` from Docker Hub in September 2026 and
+then stopped serving anonymous pulls on quay.io, so neither of the references
+older walkthroughs use still works. `bitnamilegacy/minio` is a frozen public
+archive of the last Bitnami build, it carries both the server and `mc`, and it
+is the image `make test-s3` pins. Any S3-compatible endpoint works here — MinIO
+is a convenience, not a requirement.
+:::
+
+Create a bucket and a read-only user. `mc` lives in the same image:
 
 ```bash
 export MC_HOST_local=http://local-access:local-secret-value@127.0.0.1:9000
-docker run --rm --network host --env MC_HOST_local \
-  quay.io/minio/mc mb local/backups
+docker run --rm --network host --env MC_HOST_local --env HOME=/tmp \
+  --user 0 --entrypoint mc \
+  bitnamilegacy/minio mb local/backups
 ```
 
 ## 3. Put a Barman repository in it

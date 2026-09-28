@@ -1,8 +1,25 @@
 #!/bin/sh
 set -eu
 
-minio_image='quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e'
-mc_image='quay.io/minio/mc@sha256:fb8f773eac8ef9d6da0486d5dec2f42f219358bcb8de579d1623d518c9ebd4cc'
+# MinIO no longer publishes a community image anyone can pull. minio/minio and
+# minio/mc were removed from Docker Hub on 2026-09-11, this journey was
+# repointed at quay.io, and on 2026-09-24 those repositories stopped serving
+# anonymous pulls too: both registries now answer an unauthenticated pull with
+# "unauthorized". That is what turned this check red on main with no change to
+# this repository, and a third repoint to another MinIO-operated copy would be
+# the same bet a third time.
+#
+# bitnamilegacy/minio is Broadcom's frozen archive of the last Bitnami build.
+# It is public, anonymously pullable, and carries both binaries —
+# /opt/bitnami/minio/bin/minio and /opt/bitnami/minio-client/bin/mc — so one
+# pin serves the server and the client. Frozen is the point rather than a
+# compromise here: the archive receives no updates, so the digest cannot move
+# and the repository it belongs to has no reason to revoke it. This is a test
+# fixture that runs on a loopback port for the length of one journey; nothing
+# shipped depends on it, and it is not a supply-chain input to the binary.
+#
+# Tag 2025.5.24 (MinIO RELEASE.2025-05-24), multi-architecture index digest.
+minio_image='bitnamilegacy/minio@sha256:451fe6858cb770cc9d0e77ba811ce287420f781c7c1b806a386f6896471a349c'
 container="objectstoreviewer-test-minio-$$"
 root_access='test-root-access'
 root_secret='test-root-secret-canary'
@@ -21,8 +38,14 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+# --entrypoint and --user 0: the Bitnami image starts a wrapper script as uid
+# 1001, which cannot create /data. Running the binary directly as root is what
+# the official image this replaced did, so the server the journey talks to is
+# the same server it talked to before.
 docker run --detach --name "$container" \
     --publish 127.0.0.1::9000 \
+    --user 0 \
+    --entrypoint minio \
     --env "MINIO_ROOT_USER=$root_access" \
     --env "MINIO_ROOT_PASSWORD=$root_secret" \
     "$minio_image" server /data >/dev/null
@@ -40,8 +63,26 @@ until curl --fail --silent "$endpoint/minio/health/ready" >/dev/null; do
 done
 
 root_host="http://$root_access:$root_secret@127.0.0.1:$port"
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" mb test/objectstoreviewer-proof >/dev/null
-printf '%s' 'outside-root' | docker run --rm --interactive --network host --env "MC_HOST_test=$root_host" "$mc_image" pipe test/objectstoreviewer-proof/outside/ignored >/dev/null
+
+# mc ships in the same image, so the client needs no second pin. HOME is set
+# because mc writes its configuration before it runs the requested command,
+# and the image's HOME is the container root.
+mc() {
+    docker run --rm --network host --user 0 \
+        --env "MC_HOST_test=$root_host" --env 'HOME=/tmp' \
+        --entrypoint mc "$minio_image" "$@"
+}
+
+# Separate from mc() only for --interactive: without it the piped stdin the
+# fixture mutations depend on never reaches the container.
+mc_pipe() {
+    docker run --rm --interactive --network host --user 0 \
+        --env "MC_HOST_test=$root_host" --env 'HOME=/tmp' \
+        --entrypoint mc "$minio_image" pipe "$@"
+}
+
+mc mb test/objectstoreviewer-proof >/dev/null
+printf '%s' 'outside-root' | mc_pipe test/objectstoreviewer-proof/outside/ignored >/dev/null
 docker build --quiet --file internal/provider/s3/testdata/barman-generator.Dockerfile --tag "$barman_image" . >/dev/null
 
 docker run --detach --name "$postgres_container" \
@@ -71,34 +112,31 @@ docker run --rm --network host \
         --host 127.0.0.1 --port "$postgres_port" --user postgres \
         s3://objectstoreviewer-proof/repository alpha >/dev/null
 
-completed_id=$(docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" ls test/objectstoreviewer-proof/repository/alpha/base/ | awk '{print $NF}' | tr -d '/')
+completed_id=$(mc ls test/objectstoreviewer-proof/repository/alpha/base/ | awk '{print $NF}' | tr -d '/')
 if [ -z "$completed_id" ]; then
     echo 'Barman did not generate a completed backup' >&2
     exit 1
 fi
 
 for mutation in started failed malformed; do
-    docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" cp --recursive \
+    mc cp --recursive \
         "test/objectstoreviewer-proof/repository/alpha/base/$completed_id/" \
         "test/objectstoreviewer-proof/repository/alpha/base/$mutation/" >/dev/null
 done
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" cat \
+mc cat \
     "test/objectstoreviewer-proof/repository/alpha/base/$completed_id/backup.info" \
     | sed 's/^status=DONE$/status=STARTED/' \
-    | docker run --rm --interactive --network host --env "MC_HOST_test=$root_host" "$mc_image" pipe \
-        test/objectstoreviewer-proof/repository/alpha/base/started/backup.info >/dev/null
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" cat \
+    | mc_pipe test/objectstoreviewer-proof/repository/alpha/base/started/backup.info >/dev/null
+mc cat \
     "test/objectstoreviewer-proof/repository/alpha/base/$completed_id/backup.info" \
     | sed 's/^status=DONE$/status=FAILED/' \
-    | docker run --rm --interactive --network host --env "MC_HOST_test=$root_host" "$mc_image" pipe \
-        test/objectstoreviewer-proof/repository/alpha/base/failed/backup.info >/dev/null
+    | mc_pipe test/objectstoreviewer-proof/repository/alpha/base/failed/backup.info >/dev/null
 printf '%s\n' 'malformed Barman metadata' \
-    | docker run --rm --interactive --network host --env "MC_HOST_test=$root_host" "$mc_image" pipe \
-        test/objectstoreviewer-proof/repository/alpha/base/malformed/backup.info >/dev/null
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" cp \
+    | mc_pipe test/objectstoreviewer-proof/repository/alpha/base/malformed/backup.info >/dev/null
+mc cp \
     "test/objectstoreviewer-proof/repository/alpha/base/$completed_id/backup.info" \
     test/objectstoreviewer-proof/repository/alpha/base/missing-artifact/backup.info >/dev/null
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" cp \
+mc cp \
     "test/objectstoreviewer-proof/repository/alpha/base/$completed_id/data.tar.gz" \
     test/objectstoreviewer-proof/repository/alpha/base/missing-info/data.tar.gz >/dev/null
 
@@ -110,10 +148,14 @@ docker run --rm --network host \
     "$barman_image" sh -c 'truncate -s 16777216 /tmp/000000010000000000000001 && barman-cloud-wal-archive --endpoint-url "$TEST_ENDPOINT" --addressing-style path s3://objectstoreviewer-proof/repository alpha /tmp/000000010000000000000001' >/dev/null
 printf 'Barman fixture generator: %s\n' "$(docker run --rm "$barman_image" barman-cloud-backup --version)"
 printf 'PostgreSQL fixture image: %s\n' "$postgres_image"
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" admin user add test "$viewer_access" "$viewer_secret" >/dev/null
+printf 'S3 fixture image: %s\n' "$minio_image"
+mc admin user add test "$viewer_access" "$viewer_secret" >/dev/null
 policy_file="$PWD/internal/provider/s3/testdata/minio-readonly-policy.json"
-docker run --rm --network host --env "MC_HOST_test=$root_host" --volume "$policy_file:/policy.json:ro" "$mc_image" admin policy create test objectstoreviewer-readonly /policy.json >/dev/null
-docker run --rm --network host --env "MC_HOST_test=$root_host" "$mc_image" admin policy attach test objectstoreviewer-readonly --user "$viewer_access" >/dev/null
+docker run --rm --network host --user 0 \
+    --env "MC_HOST_test=$root_host" --env 'HOME=/tmp' \
+    --volume "$policy_file:/policy.json:ro" \
+    --entrypoint mc "$minio_image" admin policy create test objectstoreviewer-readonly /policy.json >/dev/null
+mc admin policy attach test objectstoreviewer-readonly --user "$viewer_access" >/dev/null
 
 OBJECTSTOREVIEWER_S3_INTEGRATION_ENDPOINT="$endpoint" \
 OBJECTSTOREVIEWER_S3_INTEGRATION_ACCESS_KEY="$viewer_access" \
